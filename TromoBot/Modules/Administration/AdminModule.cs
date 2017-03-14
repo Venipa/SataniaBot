@@ -55,5 +55,15 @@ namespace TromoBot.Modules
             
         }
 
+        [Command("prune")]
+        [RequireBotPermission(GuildPermission.ManageMessages)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
+        public async Task Prune(int number = 10)
+        {
+            var msgs = Context.Channel.GetCachedMessages(number + 1);       //only gets cached messages at the moment, will get fixed
+            await Context.Channel.DeleteMessagesAsync(msgs);
+            await ReplyAsync($"{number} messages were deleted");
+        }
+
     }
 }
