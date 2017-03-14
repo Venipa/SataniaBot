@@ -15,7 +15,7 @@ namespace TromoBot.Modules
         [Command("ping")]
         public async Task Say()
         {
-            await ReplyAsync("dicks");
+            await ReplyAsync("pong!");
         }        
     }
 }
