@@ -10,10 +10,12 @@ namespace TromoBot.Modules
         [Command("test")]
         public async Task Say([Remainder] string echo)
         {
-
             await ReplyAsync(echo);
-
         }
-        
+        [Command("ping")]
+        public async Task Say()
+        {
+            await ReplyAsync("dicks");
+        }        
     }
 }
