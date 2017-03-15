@@ -12,10 +12,20 @@ namespace TromoBot.Modules
         {
             await ReplyAsync(echo);
         }
+
         [Command("ping")]
         public async Task Say()
         {
             await ReplyAsync("Pong!");
-        }        
+        }
+
+        [Command("rng")]
+        public async Task Random()
+        {
+            Random rng = new Random();
+            var RandomNumber = (rng.Next(1, 101));
+            await ReplyAsync("Your random number is : "+$"{RandomNumber}");
+        }
     }
 }
+
