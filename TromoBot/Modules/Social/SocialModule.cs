@@ -23,8 +23,38 @@ namespace TromoBot.Modules
         public async Task Random()
         {
             Random rng = new Random();
-            var RandomNumber = (rng.Next(1, 101));
-            await ReplyAsync("Your random number is : "+$"{RandomNumber}");
+            var RandomNumber = (rng.Next(1, 100));
+            await ReplyAsync("Your random number is : " + $"{RandomNumber}");
+        }
+
+        [Command("love")]
+        public async Task Love()
+        {
+            Random rng = new Random();
+            var LoveChance = (rng.Next(1, 100));
+            var LoveReply = "you shouldn't see this";
+
+            if (LoveChance <= 25)
+            {
+                LoveReply = "TromoBot doesn't love you :(";
+            }
+
+            else if (LoveChance >= 26  && LoveChance <= 50)
+            {
+                LoveReply = "TromoBot and you can be good friends :)";
+            }
+
+            else if (LoveChance >= 51 && LoveChance <= 75)
+            {
+                LoveReply = "TromoBot and you can be besties now :D";
+            }
+
+            else if (LoveChance >= 76)
+            {
+                LoveReply = "TromoBot loves you a lot <3";
+            };
+
+            await ReplyAsync(LoveReply);
         }
     }
 }
