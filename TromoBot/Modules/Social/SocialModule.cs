@@ -7,7 +7,7 @@ namespace TromoBot.Modules
     public class SocialModule : ModuleBase<SocketCommandContext>
     {
 
-        [Command("test")]
+        [Command("say")]
         public async Task Say([Remainder] string echo)
         {
             await ReplyAsync(echo);
@@ -15,7 +15,7 @@ namespace TromoBot.Modules
         [Command("ping")]
         public async Task Say()
         {
-            await ReplyAsync("pong!");
+            await ReplyAsync("Pong!");
         }        
     }
 }
