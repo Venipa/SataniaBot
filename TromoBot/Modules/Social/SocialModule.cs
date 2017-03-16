@@ -1,6 +1,8 @@
 ﻿using System;
 using Discord.Commands;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
+using Discord;
 
 namespace TromoBot.Modules
 {
@@ -55,6 +57,30 @@ namespace TromoBot.Modules
             };
 
             await ReplyAsync(LoveReply);
+        }
+
+        [Command("emote")]
+        public async Task Emote(string emote)
+        {
+            Regex r = new Regex("\\:(\\d.*?[1-9])\\>", RegexOptions.IgnoreCase); //using regex to match the id between the : and > in the emote code
+            Match m = r.Match(emote);                                            //dont ask how regex works because i dont know
+            if (m.Success)                                                       //black magic happens
+            {
+                String int1 = m.Groups[1].ToString();
+                Console.WriteLine(int1);
+                string imageurl = "https://cdn.discordapp.com/emojis/" + int1.ToString() + ".png";
+
+                EmbedBuilder embed = new EmbedBuilder();
+                embed.ImageUrl = imageurl;
+
+                await ReplyAsync("", embed: embed);
+
+            }
+            else
+            {
+                return;
+            }
+
         }
     }
 }
