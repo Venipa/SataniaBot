@@ -21,16 +21,26 @@ namespace TromoBot.Modules
         [RequireOwner()]
         public async Task SetName([Remainder] string name = null)
         {
+
+            EmbedBuilder builder = new EmbedBuilder();
+
             if (name == null)
                 return;
 
             try { 
                 await TromoBot._client.CurrentUser.ModifyAsync(x => x.Username = name);
-                await ReplyAsync("Username successfully changed. :ok_hand:");
+
+                builder.Description = "Username successfully changed. :ok_hand:";
+                builder.Color = new Color(111, 237, 69);
+
+                await ReplyAsync("", embed: builder);
             }
             catch
-            {   
-                await ReplyAsync("Something went wrong when trying to change username, please try again later.");
+            {
+                builder.Description = "Something went wrong when trying to change username, please try again later.";
+                builder.Color = new Color(222, 90, 47);
+
+                await ReplyAsync("", embed: builder);
             }
         }
 
@@ -41,18 +51,32 @@ namespace TromoBot.Modules
             if (url == null)
                 return;
 
+            EmbedBuilder builder = new EmbedBuilder();
             var http = new HttpClient();
 
-            using (var stream = await http.GetStreamAsync(url))
+            try
             {
-                var imgStream = new MemoryStream();
-                await stream.CopyToAsync(imgStream);
-                imgStream.Position = 0;
+                using (var stream = await http.GetStreamAsync(url))
+                {
+                    var imgStream = new MemoryStream();
+                    await stream.CopyToAsync(imgStream);
+                    imgStream.Position = 0;
 
-                await TromoBot._client.CurrentUser.ModifyAsync(u => u.Avatar = new Image(imgStream)).ConfigureAwait(false);
-                await ReplyAsync("Profile picture successfully changed :ok_hand:");
+                    await TromoBot._client.CurrentUser.ModifyAsync(u => u.Avatar = new Image(imgStream)).ConfigureAwait(false);
+
+                    builder.Description = "Profile picture successfully changed :ok_hand:";
+                    builder.Color = new Color(111, 237, 69);
+
+                    await ReplyAsync("", embed: builder);
+                }
             }
-            
+            catch
+            {
+                builder.Description = "Could not change profile picture to url, please try again later.";
+                builder.Color = new Color(222, 90, 47);
+
+                await ReplyAsync("", embed: builder);
+            }
         }
 
         [Command("prune")]
@@ -60,10 +84,20 @@ namespace TromoBot.Modules
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task Prune(int number = 10)
         {
+            EmbedBuilder builder = new EmbedBuilder();
             var msgs = Context.Channel.GetCachedMessages(number + 1);       //only gets cached messages at the moment, will get fixed
+
             await Context.Channel.DeleteMessagesAsync(msgs);
-            await ReplyAsync($"{number} messages were deleted");
+
+            builder.Description = $"{Context.Message.Author.Mention}\n{number} messages were pruned";
+            builder.Color = new Color(111, 237, 69);
+            
+            await ReplyAsync("", embed: builder);
+           
         }
+
+
+
 
     }
 }
