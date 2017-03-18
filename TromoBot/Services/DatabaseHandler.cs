@@ -35,7 +35,6 @@ namespace TromoBot.Services
 
                 while (reader.Read())
                 {
-                    Console.WriteLine($"{reader["commandprefix"]}");
                     string result = reader["commandprefix"].ToString();
 
                     conn.Close();
