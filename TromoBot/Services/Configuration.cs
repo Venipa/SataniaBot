@@ -22,6 +22,15 @@ namespace TromoBot
         /// <summary> Your bot's login token. </summary>
         public string Token { get; set; } = "";
 
+        /// <summary> Host adress database is hosted on </summary>
+        public string DatabaseHost { get; set; } = "";
+        /// <summary> Username for database </summary>
+        public string DatabaseUsername { get; set; } = "";
+        /// <summary> Password for database </summary>
+        public string DatabasePassword { get; set; } = "";
+        /// <summary> Name for the database hosted </summary>
+        public string DatabaseName { get; set; } = "";
+
         public static void EnsureExists()
         {
             string file = Path.Combine(AppContext.BaseDirectory, FileName);
