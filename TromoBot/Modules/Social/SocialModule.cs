@@ -62,7 +62,7 @@ namespace TromoBot.Modules
         [Command("emote")]
         public async Task Emote(string emote)
         {
-            Regex r = new Regex("\\:(\\d.*?[1-9])\\>", RegexOptions.IgnoreCase); //using regex to match the id between the : and > in the emote code
+            Regex r = new Regex("\\:(\\d.*?[0-9])\\>", RegexOptions.IgnoreCase); //using regex to match the id between the : and > in the emote code
             Match m = r.Match(emote);                                            //dont ask how regex works because i dont know
             if (m.Success)                                                       //black magic happens
             {
