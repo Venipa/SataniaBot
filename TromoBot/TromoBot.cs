@@ -2,6 +2,7 @@
 using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
+using TromoBot.Services;
 
 namespace TromoBot
 {
@@ -10,7 +11,7 @@ namespace TromoBot
         public static void Main(string[] args)
         => new TromoBot().Start().GetAwaiter().GetResult();
 
-
+        public static DatabaseHandler db = new DatabaseHandler();
         public static DiscordSocketClient _client;
         private CommandHandler _commands;
 
@@ -35,7 +36,15 @@ namespace TromoBot
             _commands = new CommandHandler();                // Initialize the command handler service
             await _commands.Install(_client);
 
+            _client.JoinedGuild += _client_JoinedGuild;
+
             await Task.Delay(-1);                            // Prevent the console window from closing.
+        }
+
+        private async Task _client_JoinedGuild(SocketGuild arg)
+        {
+            db.addServer(arg);
+            await arg.DownloadUsersAsync();             //only reason i have this here is because the task threw a fit because i didnt have any return value
         }
     }
 }
