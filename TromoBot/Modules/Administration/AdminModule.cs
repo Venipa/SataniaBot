@@ -3,6 +3,7 @@ using Discord.Commands;
 using Discord.WebSocket;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
@@ -79,6 +80,25 @@ namespace TromoBot.Modules
             }
         }
 
+        [Command("setprefix")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        public async Task SetPrefix(string prefix)
+        {
+            TromoBot.db.updatePrefix(Context.Guild, prefix);
+            await ReplyAsync("New prefix set to: " + prefix);
+        }
+
+
+        [Command("die")]
+        [RequireOwner()]
+        public async Task Die()
+        {
+            await ReplyAsync("Sorry if I did anything wrong. :(");
+
+            Environment.Exit(0);
+
+        }
+
         [Command("prune")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
         [RequireUserPermission(GuildPermission.ManageMessages)]
@@ -96,8 +116,57 @@ namespace TromoBot.Modules
            
         }
 
+        [Command("kick")]
+        [RequireBotPermission(GuildPermission.ManageMessages)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
+        public async Task Kick(SocketGuildUser user = null)
+        {
 
+            EmbedBuilder builder = new EmbedBuilder();
 
+            try
+            {
+                await user.KickAsync();
 
+                builder.Description = $"{Context.Message.Author.Mention}\n {user} was kicked from this server.";
+                builder.Color = new Color(111, 237, 69);
+
+                await ReplyAsync("", embed: builder);
+            }
+            catch
+            {
+                builder.Description = $"{Context.Message.Author.Mention}\n {user} could not be kicked from this server.");
+                builder.Color = new Color(222, 90, 47);
+
+                await ReplyAsync("", embed: builder);
+            }
+
+        }
+
+        [Command("ban")]
+        [RequireBotPermission(GuildPermission.ManageMessages)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
+        public async Task Ban(SocketGuildUser user = null)
+        {
+
+            EmbedBuilder builder = new EmbedBuilder();
+
+            try
+            {
+                await Context.Guild.AddBanAsync(user, 1);
+
+                builder.Description = $"{Context.Message.Author.Mention}\n {user} was banned from this server.";
+                builder.Color = new Color(111, 237, 69);
+
+                await ReplyAsync("", embed: builder);
+            }
+            catch
+            {
+                builder.Description = $"{Context.Message.Author.Mention}\n {user} could not be banned from this server.");
+                builder.Color = new Color(222, 90, 47);
+
+                await ReplyAsync("", embed: builder);
+            }
+        }
     }
 }
