@@ -29,7 +29,8 @@ namespace TromoBot.Services
 
                 conn.Open();
 
-                var command = new MySqlCommand($"SELECT * FROM serversettings where serverid = '{guildid}';", conn);
+                var command = new MySqlCommand($"SELECT * FROM serversettings where serverid = @guildid;", conn);
+                command.Parameters.AddWithValue("@guildid", guildid);
 
                 MySqlDataReader reader = command.ExecuteReader();
 
@@ -58,7 +59,9 @@ namespace TromoBot.Services
 
             conn.Open();
 
-            var command = new MySqlCommand($"UPDATE `serversettings` SET `commandprefix`='{prefix}' WHERE `serverid`='{s.Id}';", conn);
+            var command = new MySqlCommand($"UPDATE `serversettings` SET `commandprefix`= @prefix WHERE `serverid`= @guildid;", conn);
+            command.Parameters.AddWithValue("@guildid", s.Id);
+            command.Parameters.AddWithValue("@prefix", prefix);
 
             MySqlDataReader reader = command.ExecuteReader();
 
@@ -73,7 +76,8 @@ namespace TromoBot.Services
 
             conn.Open();
 
-            var command = new MySqlCommand($"INSERT INTO `serversettings` (`serverid`, `commandprefix`) VALUES ('{s.Id}', '!')", conn);
+            var command = new MySqlCommand($"INSERT INTO `serversettings` (`serverid`, `commandprefix`) VALUES (@guildid', '!')", conn);
+            command.Parameters.AddWithValue("@guildid", s.Id);
 
             MySqlDataReader reader = command.ExecuteReader();
 
