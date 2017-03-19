@@ -42,8 +42,9 @@ namespace TromoBot
             {                                                         // Try and execute a command with the given context.
                 var result = await _cmds.ExecuteAsync(context, argPos);
 
-                if (!result.IsSuccess)                                // If execution failed, reply with the error message.
-                    await context.Channel.SendMessageAsync(result.ToString());
+                //if (!result.IsSuccess)                                // If execution failed, reply with the error message.
+                //   Console.WriteLine(result.ToString());
+                //      Commented out because otherwise bot either spams console or chat with error message when it doesnt find a command, unneeded
             }
         }
     }
