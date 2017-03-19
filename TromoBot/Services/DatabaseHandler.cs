@@ -51,6 +51,21 @@ namespace TromoBot.Services
             }
         }
 
+        public void updatePrefix(SocketGuild s, string prefix)
+        {
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = myConnectionString;
+
+            conn.Open();
+
+            var command = new MySqlCommand($"UPDATE `serversettings` SET `commandprefix`='{prefix}' WHERE `serverid`='{s.Id}';", conn);
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            conn.Close();
+        }
+
+
         public void addServer(SocketGuild s)
         {
             MySqlConnection conn = new MySqlConnection();
