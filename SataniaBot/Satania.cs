@@ -2,14 +2,14 @@
 using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
-using TromoBot.Services;
+using SataniaBot.Services;
 
-namespace TromoBot
+namespace SataniaBot
 {
-    public class TromoBot
+    public class Satania
     {
         public static void Main(string[] args)
-        => new TromoBot().Start().GetAwaiter().GetResult();
+        => new Satania().Start().GetAwaiter().GetResult();
 
         public static DatabaseHandler db = new DatabaseHandler();
         public static DiscordSocketClient _client;

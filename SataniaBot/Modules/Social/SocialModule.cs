@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using Discord;
 
-namespace TromoBot.Modules
+namespace SataniaBot.Modules
 {
     public class SocialModule : ModuleBase<SocketCommandContext>
     {
@@ -38,22 +38,22 @@ namespace TromoBot.Modules
 
             if (LoveChance <= 25)
             {
-                LoveReply = "TromoBot doesn't love you :(";
+                LoveReply = "Satania doesn't love you :(";
             }
 
             else if (LoveChance >= 26  && LoveChance <= 50)
             {
-                LoveReply = "TromoBot and you can be good friends :)";
+                LoveReply = "Satania and you can be good friends :)";
             }
 
             else if (LoveChance >= 51 && LoveChance <= 75)
             {
-                LoveReply = "TromoBot and you can be besties now :D";
+                LoveReply = "Satania and you can be besties now :D";
             }
 
             else if (LoveChance >= 76)
             {
-                LoveReply = "TromoBot loves you a lot <3";
+                LoveReply = "Satania loves you a lot <3";
             };
 
             await ReplyAsync(LoveReply);

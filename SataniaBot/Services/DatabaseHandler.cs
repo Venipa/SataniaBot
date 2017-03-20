@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using MySql;
 using MySql.Data.MySqlClient;
 using Discord.WebSocket;
-using System.Threading.Tasks;
 
-namespace TromoBot.Services
+namespace SataniaBot.Services
 {
     public class DatabaseHandler
     {

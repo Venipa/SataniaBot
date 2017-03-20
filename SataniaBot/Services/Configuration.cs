@@ -1,10 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 
-namespace TromoBot
+namespace SataniaBot.Services
 {
     /// <summary> 
     /// A file that contains information you either don't want public

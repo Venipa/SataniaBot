@@ -1,13 +1,10 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
-using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace TromoBot
+namespace SataniaBot.Services
 {
     /// <summary> Detect whether a message is a command, then execute it. </summary>
     public class CommandHandler
@@ -27,7 +24,7 @@ namespace TromoBot
 
         private async Task HandleCommand(SocketMessage s)
         {
-            var serverPrefix = TromoBot.db.getPrefix((s.Channel as IGuildChannel)?.Guild.Id.ToString());
+            var serverPrefix = Satania.db.getPrefix((s.Channel as IGuildChannel)?.Guild.Id.ToString());
             var msg = s as SocketUserMessage;
             if (msg == null)                                          // Check if the received message is from a user.
                 return;

@@ -5,14 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
-using TromoBot;
 
-namespace TromoBot.Modules
+namespace SataniaBot.Modules
 {
     public class AdminModule : ModuleBase<SocketCommandContext>
     {
@@ -29,7 +25,7 @@ namespace TromoBot.Modules
                 return;
 
             try { 
-                await TromoBot._client.CurrentUser.ModifyAsync(x => x.Username = name);
+                await Satania._client.CurrentUser.ModifyAsync(x => x.Username = name);
 
                 builder.Description = "Username successfully changed. :ok_hand:";
                 builder.Color = new Color(111, 237, 69);
@@ -63,7 +59,7 @@ namespace TromoBot.Modules
                     await stream.CopyToAsync(imgStream);
                     imgStream.Position = 0;
 
-                    await TromoBot._client.CurrentUser.ModifyAsync(u => u.Avatar = new Image(imgStream)).ConfigureAwait(false);
+                    await Satania._client.CurrentUser.ModifyAsync(u => u.Avatar = new Image(imgStream)).ConfigureAwait(false);
 
                     builder.Description = "Profile picture successfully changed :ok_hand:";
                     builder.Color = new Color(111, 237, 69);
@@ -84,7 +80,7 @@ namespace TromoBot.Modules
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task SetPrefix(string prefix)
         {
-            TromoBot.db.updatePrefix(Context.Guild, prefix);
+            Satania.db.updatePrefix(Context.Guild, prefix);
             await ReplyAsync("New prefix set to: " + prefix);
         }
 
@@ -135,7 +131,7 @@ namespace TromoBot.Modules
             }
             catch
             {
-                builder.Description = $"{Context.Message.Author.Mention}\n {user} could not be kicked from this server.");
+                builder.Description = $"{Context.Message.Author.Mention}\n {user} could not be kicked from this server.";
                 builder.Color = new Color(222, 90, 47);
 
                 await ReplyAsync("", embed: builder);
@@ -162,7 +158,7 @@ namespace TromoBot.Modules
             }
             catch
             {
-                builder.Description = $"{Context.Message.Author.Mention}\n {user} could not be banned from this server.");
+                builder.Description = $"{Context.Message.Author.Mention}\n {user} could not be banned from this server.";
                 builder.Color = new Color(222, 90, 47);
 
                 await ReplyAsync("", embed: builder);
