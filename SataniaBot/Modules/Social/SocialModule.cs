@@ -8,10 +8,14 @@ namespace SataniaBot.Modules
 {
     public class SocialModule : ModuleBase<SocketCommandContext>
     {
-
         [Command("say")]
-        public async Task Say([Remainder] string echo)
+        public async Task Say([Remainder] string echo = null)
         {
+            if(echo == null)
+            {
+                echo = "TRICKED";
+            }
+
             await ReplyAsync(echo);
         }
 
@@ -30,33 +34,30 @@ namespace SataniaBot.Modules
         }
 
         [Command("love")]
-        public async Task Love()
+        public async Task Love(string user1, [Remainder] string user2 = null)
         {
-            Random rng = new Random();
-            var LoveChance = (rng.Next(1, 100));
-            var LoveReply = "you shouldn't see this";
+            string PersonOne = user1;       //note to self: define most things outside for(),foreach() and while() loops unless the variable wont be needed
+            string PersonTwo = user2;
+            int SecondName = 0;
+            int FirstName = 0;
 
-            if (LoveChance <= 25)
+            foreach (char Letter in PersonOne)
             {
-                LoveReply = "Satania doesn't love you :(";
-            }
-
-            else if (LoveChance >= 26  && LoveChance <= 50)
-            {
-                LoveReply = "Satania and you can be good friends :)";
-            }
-
-            else if (LoveChance >= 51 && LoveChance <= 75)
-            {
-                LoveReply = "Satania and you can be besties now :D";
-            }
-
-            else if (LoveChance >= 76)
-            {
-                LoveReply = "Satania loves you a lot <3";
+                FirstName = +Convert.ToInt32(Letter);
             };
 
-            await ReplyAsync(LoveReply);
+            foreach (char Letter in PersonTwo)      //for each makes the loop run once every one character in the string that is inputted
+            {
+                SecondName =+ Convert.ToInt32(Letter);          //converts the current letter and adds it to the SecondName Total
+            }
+
+            await ReplyAsync($"{FirstName}, {SecondName}");
+            int Seed = SecondName + FirstName;
+
+            Random rngseed = new Random(Seed);
+            var LoveChance = (rngseed.Next(1, 100));
+
+            await ReplyAsync("The Love between " + PersonOne + " and " + PersonTwo + " is " + $"{LoveChance}" + "%");
         }
 
         [Command("emote")]
