@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 
 namespace SataniaBot.Modules
 {
+    [Name("Admin")]
     public class AdminModule : ModuleBase<SocketCommandContext>
     {
 

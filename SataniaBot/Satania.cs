@@ -13,7 +13,7 @@ namespace SataniaBot
 
         public static DatabaseHandler db = new DatabaseHandler();
         public static DiscordSocketClient _client;
-        private CommandHandler _commands;
+        public static CommandHandler _commands = new CommandHandler();
 
         public async Task Start()
         {
@@ -33,7 +33,6 @@ namespace SataniaBot
             await _client.LoginAsync(TokenType.Bot, Configuration.Load().Token);
             await _client.StartAsync();
 
-            _commands = new CommandHandler();                // Initialize the command handler service
             await _commands.Install(_client);
 
             _client.JoinedGuild += _client_JoinedGuild;

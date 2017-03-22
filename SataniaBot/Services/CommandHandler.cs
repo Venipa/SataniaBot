@@ -10,7 +10,7 @@ namespace SataniaBot.Services
     public class CommandHandler
     {
         private DiscordSocketClient _client;
-        private CommandService _cmds;
+        public CommandService _cmds;
 
         public async Task Install(DiscordSocketClient c)
         {

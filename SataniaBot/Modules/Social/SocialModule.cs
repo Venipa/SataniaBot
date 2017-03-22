@@ -6,6 +6,7 @@ using Discord;
 
 namespace SataniaBot.Modules
 {
+    [Name("Social")]
     public class SocialModule : ModuleBase<SocketCommandContext>
     {
         [Command("say")]
