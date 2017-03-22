@@ -16,7 +16,7 @@ namespace SataniaBot.Modules.Help
         public async Task Commands()
         {
             EmbedBuilder embed = new EmbedBuilder();
-            embed.Color = new Color(249, 55, 42);
+            embed.Color = new Color(114, 137, 218);
 
             foreach (var m in Satania._commands._cmds.Modules)
             {
