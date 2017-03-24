@@ -114,8 +114,8 @@ namespace SataniaBot.Modules
         }
 
         [Command("kick")]
-        [RequireBotPermission(GuildPermission.ManageMessages)]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
+        [RequireBotPermission(GuildPermission.KickMembers)]
+        [RequireUserPermission(GuildPermission.KickMembers)]
         public async Task Kick(SocketGuildUser user = null)
         {
 
@@ -141,8 +141,8 @@ namespace SataniaBot.Modules
         }
 
         [Command("ban")]
-        [RequireBotPermission(GuildPermission.ManageMessages)]
-        [RequireUserPermission(GuildPermission.ManageMessages)]
+        [RequireBotPermission(GuildPermission.BanMembers)]
+        [RequireUserPermission(GuildPermission.BanMembers)]
         public async Task Ban(SocketGuildUser user = null)
         {
 
