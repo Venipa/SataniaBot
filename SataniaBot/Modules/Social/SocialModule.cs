@@ -1,4 +1,4 @@
-﻿using System;
+﻿    using System;
 using Discord.Commands;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
@@ -10,23 +10,29 @@ namespace SataniaBot.Modules
     public class SocialModule : ModuleBase<SocketCommandContext>
     {
         [Command("say")]
-        public async Task Say([Remainder] string echo = null)
+        [Summary("Echos a message")]
+        [Remarks("say hi")]
+        public async Task Say([Remainder] string EchoMessage = null)
         {
-            if(echo == null)
+            if(EchoMessage == null)
             {
-                echo = "TRICKED";
+                EchoMessage = "TRICKED";
             }
 
-            await ReplyAsync(echo);
+            await ReplyAsync(EchoMessage);
         }
 
         [Command("ping")]
+        [Summary("Pong!")]
+        [Remarks("ping")]
         public async Task Say()
         {
             await ReplyAsync("Pong!");
         }
 
         [Command("rng")]
+        [Summary("Generates random number between 1-100")]
+        [Remarks("rng")]
         public async Task Random()
         {
             Random rng = new Random();
@@ -35,10 +41,12 @@ namespace SataniaBot.Modules
         }
 
         [Command("love")]
-        public async Task Love(string user1, [Remainder] string user2 = null)
+        [Summary("\"Generates\" love between two people")]
+        [Remarks("love tromo jessica")]
+        public async Task Love(string User1, [Remainder] string User2 = null)
         {
-            string PersonOne = user1;       //note to self: define most things outside for(),foreach() and while() loops unless the variable wont be needed
-            string PersonTwo = user2;
+            string PersonOne = User1;       //note to self: define most things outside for(),foreach() and while() loops unless the variable wont be needed
+            string PersonTwo = User2;
             int SecondName = 0;
             int FirstName = 0;
 
@@ -62,6 +70,8 @@ namespace SataniaBot.Modules
         }
 
         [Command("emote")]
+        [Summary("Sends full size image of an emote")]
+        [Remarks("emote meguButt")]
         public async Task Emote(string emote)
         {
             Regex r = new Regex("\\:(\\d.*?[0-9])\\>", RegexOptions.IgnoreCase); //using regex to match the id between the : and > in the emote code

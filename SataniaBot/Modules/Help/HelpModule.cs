@@ -13,6 +13,8 @@ namespace SataniaBot.Modules.Help
     {
 
         [Command("commands")]
+        [Summary("Lists all commands")]
+        [Remarks("commands")]
         public async Task Commands()
         {
             EmbedBuilder embed = new EmbedBuilder();
@@ -34,6 +36,8 @@ namespace SataniaBot.Modules.Help
         }
 
         [Command("help")]
+        [Summary("Get help for a specific command")]
+        [Remarks("help setname")]
         public async Task Help(string commandname)
         {
             EmbedBuilder embed = new EmbedBuilder();
