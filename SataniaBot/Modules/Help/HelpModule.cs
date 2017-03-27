@@ -63,7 +63,8 @@ namespace SataniaBot.Modules.Help
             EmbedFieldBuilder parameterField = new EmbedFieldBuilder();
             parameterField.IsInline = true;
             parameterField.Name = "Parameters";
-            parameterField.Value = String.Join(", ", commandinfo.Parameters.Select(x => x.Name));
+            string parameters = String.Join(", ", commandinfo.Parameters.Select(x => x.Name));
+                parameterField.Value = $"` {parameters} `";              //Message won't send if no parameters because empty, so this just makes it send something at all
             embed.AddField(parameterField);
 
             //Command Example
