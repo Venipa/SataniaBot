@@ -50,17 +50,16 @@ namespace SataniaBot.Modules
             int SecondName = 0;
             int FirstName = 0;
 
-            foreach (char Letter in PersonOne)
+            foreach (char Letter in PersonOne.ToLower())
             {
                 FirstName = +Convert.ToInt32(Letter);
             };
 
-            foreach (char Letter in PersonTwo)      //for each makes the loop run once every one character in the string that is inputted
+            foreach (char Letter in PersonTwo.ToLower())      //for each makes the loop run once every one character in the string that is inputted
             {
                 SecondName =+ Convert.ToInt32(Letter);          //converts the current letter and adds it to the SecondName Total
             }
 
-            await ReplyAsync($"{FirstName}, {SecondName}");
             int Seed = SecondName + FirstName;
 
             Random rngseed = new Random(Seed);
