@@ -1,4 +1,4 @@
-﻿    using System;
+﻿using System;
 using Discord.Commands;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
@@ -33,10 +33,27 @@ namespace SataniaBot.Modules
         [Command("rng")]
         [Summary("Generates random number between 1-100")]
         [Remarks("rng")]
-        public async Task Random()
+        public async Task Random(int MaxValue = 0, [Remainder] int MinValue = 0)
         {
+            if (MaxValue < 0 || MinValue < 0)
+            {
+                await ReplyAsync("The number(s) have to be above 0");
+                return;
+            }
+
+            if (MaxValue == 0)
+            {
+                MaxValue = 100;
+            };
+
+            if (MinValue> MaxValue)
+            {
+                MinValue = MaxValue - 1;
+            };
+
+            //await ReplyAsync("MinVal : "+$"{MinValue}"+" MaxVal : " + $"{MaxValue}");         test the numbers here
             Random rng = new Random();
-            var RandomNumber = (rng.Next(1, 100));
+            var RandomNumber = (rng.Next(MinValue,MaxValue));
             await ReplyAsync("Your random number is : " + $"{RandomNumber}");
         }
 
