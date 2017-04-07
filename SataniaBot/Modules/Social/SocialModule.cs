@@ -3,6 +3,8 @@ using Discord.Commands;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using Discord;
+using System.Linq;
+using Discord.WebSocket;
 
 namespace SataniaBot.Modules
 {
@@ -110,6 +112,92 @@ namespace SataniaBot.Modules
             }
 
         }
+
+        [Command("profile")]
+        [Summary("Shows specified users profile or your own if unspecified")]
+        [Remarks("profile tromodolo")]
+        public async Task Profile(IGuildUser User = null)
+        {
+            if(User == null)
+                User = Context.Message.Author as IGuildUser;
+
+            var MarriedID = Satania.db.getMarriage(User.Id.ToString());
+            bool isMarried;
+            SocketUser MarriedPerson = null;
+            if (MarriedID != null)
+            {
+                MarriedPerson = Satania._client.GetUser(205290788261724160);
+                isMarried = true;
+            }
+            else
+                isMarried = false;
+
+            EmbedBuilder embed = new EmbedBuilder();
+            embed.Color = new Color(0, 0, 0);
+            
+            EmbedAuthorBuilder AuthorBuilder = new EmbedAuthorBuilder();
+            AuthorBuilder.Name = User.Username;
+            AuthorBuilder.IconUrl = User.GetAvatarUrl(AvatarFormat.Gif);
+            if(isMarried == true)
+                embed.ThumbnailUrl = MarriedPerson.GetAvatarUrl(AvatarFormat.Gif);
+            embed.Author = AuthorBuilder;
+
+            //username
+            EmbedFieldBuilder NameField = new EmbedFieldBuilder();
+            NameField.IsInline = true;
+            NameField.Name = "Name";
+            NameField.Value = User.Username + "#" +  User.Discriminator;
+            embed.AddField(NameField);
+
+            //Marriage
+            EmbedFieldBuilder MarriedField = new EmbedFieldBuilder();
+            MarriedField.IsInline = true;
+            MarriedField.Name = "Married to:";
+            if (isMarried == true)
+                MarriedField.Value = MarriedPerson.Username + "#" + MarriedPerson.Discriminator;
+            else
+                MarriedField.Value = "No one";
+            embed.AddField(MarriedField);
+
+            //userid
+            EmbedFieldBuilder UserIDField = new EmbedFieldBuilder();
+            UserIDField.IsInline = true;
+            UserIDField.Name = "User ID";
+            UserIDField.Value = User.Id.ToString();
+            embed.AddField(UserIDField);
+            
+            //account creation date
+            EmbedFieldBuilder DateField = new EmbedFieldBuilder();
+            DateField.IsInline = true;
+            DateField.Name = "Account Creation Date";
+            DateField.Value = User.CreatedAt.ToString("MMMM dd, yyyy");
+            embed.AddField(DateField);
+
+
+            /*      Out-commented for now because experience isnt up and running yet
+            //level
+            EmbedFieldBuilder LevelField = new EmbedFieldBuilder();
+            LevelField.IsInline = true;
+            LevelField.Name = "Level";
+            LevelField.Value = "` 5023 `";
+            embed.AddField(LevelField);
+
+            //experience
+            EmbedFieldBuilder ExpField = new EmbedFieldBuilder();
+            ExpField.IsInline = true;
+            ExpField.Name = "Experience";
+            ExpField.Value = "` 271/382 `";
+            embed.AddField(ExpField);
+            */
+
+
+            await ReplyAsync("", embed: embed);
+
+
+
+        }
+
+
     }
 }
 

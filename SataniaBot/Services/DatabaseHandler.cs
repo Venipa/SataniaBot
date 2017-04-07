@@ -80,5 +80,39 @@ namespace SataniaBot.Services
             conn.Close();
         }
 
+        public string getMarriage(string userid)
+        {
+            try
+            {
+                MySqlConnection conn = new MySqlConnection();
+
+                conn.ConnectionString = myConnectionString;
+
+                conn.Open();
+
+                var command = new MySqlCommand($"SELECT * FROM userstats where userid = @userid;", conn);
+                command.Parameters.AddWithValue("@userid", userid);
+
+                MySqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    var result = reader["marriedid"].ToString();
+
+                    conn.Close();
+
+                    return result;
+                }
+                conn.Close();
+                return null;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return null;
+            }
+        }
+
+
     }
 }
