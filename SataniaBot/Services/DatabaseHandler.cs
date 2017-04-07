@@ -90,7 +90,7 @@ namespace SataniaBot.Services
 
                 conn.Open();
 
-                var command = new MySqlCommand($"SELECT * FROM userstats where userid = @userid;", conn);
+                var command = new MySqlCommand($"SELECT marriedid FROM userstats where userid = @userid;", conn);
                 command.Parameters.AddWithValue("@userid", userid);
 
                 MySqlDataReader reader = command.ExecuteReader();

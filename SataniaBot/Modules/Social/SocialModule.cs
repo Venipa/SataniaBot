@@ -121,20 +121,20 @@ namespace SataniaBot.Modules
             if(User == null)
                 User = Context.Message.Author as IGuildUser;
 
-            var MarriedID = Satania.db.getMarriage(User.Id.ToString());
+            string MarriedID = Satania.db.getMarriage(User.Id.ToString());
             bool isMarried;
             SocketUser MarriedPerson = null;
-            if (MarriedID != null)
+            if (!string.IsNullOrWhiteSpace(MarriedID))
             {
-                MarriedPerson = Satania._client.GetUser(205290788261724160);
+                MarriedPerson = Satania._client.GetUser(Convert.ToUInt64(MarriedID));
                 isMarried = true;
             }
             else
                 isMarried = false;
 
             EmbedBuilder embed = new EmbedBuilder();
-            embed.Color = new Color(0, 0, 0);
-            
+            embed.Color = new Color(190, 67, 224);
+
             EmbedAuthorBuilder AuthorBuilder = new EmbedAuthorBuilder();
             AuthorBuilder.Name = User.Username;
             AuthorBuilder.IconUrl = User.GetAvatarUrl(AvatarFormat.Gif);
