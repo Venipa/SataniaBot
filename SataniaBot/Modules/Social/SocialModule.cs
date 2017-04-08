@@ -5,11 +5,12 @@ using System.Text.RegularExpressions;
 using Discord;
 using System.Linq;
 using Discord.WebSocket;
+using Discord.Addons.InteractiveCommands;
 
 namespace SataniaBot.Modules
 {
     [Name("Social")]
-    public class SocialModule : ModuleBase<SocketCommandContext>
+    public class SocialModule : InteractiveModuleBase<SocketCommandContext>
     {
         [Command("say")]
         [Summary("Echos a message")]
@@ -192,11 +193,49 @@ namespace SataniaBot.Modules
 
 
             await ReplyAsync("", embed: embed);
-
-
-
         }
 
+
+        [Command("marry", RunMode = RunMode.Async)]
+        [Summary("Shows specified users profile or your own if unspecified")]
+        [Remarks("profile tromodolo")]
+        public async Task Marry(IGuildUser Proposal = null)
+        {
+            if (Proposal == null)
+            {
+                await ReplyAsync("You need to specify a person to marry.");
+            }
+            else if (Satania.db.getMarriage(Context.Message.Author.Id.ToString()) == Proposal.Id.ToString())
+            {
+                await ReplyAsync("You are already married to that person");
+            }
+            else if (!string.IsNullOrWhiteSpace(Satania.db.getMarriage(Context.Message.Author.Id.ToString())))
+            {
+                await ReplyAsync("You are already married, polygamy is a bad bad. If you want to marry someone else you have to divorce your partner.");
+            }
+            else if (!string.IsNullOrWhiteSpace(Satania.db.getMarriage(Proposal.Id.ToString())))
+            {
+                await ReplyAsync("You can't marry someone who is already married.");
+            }
+            else
+            {
+                await Context.Channel.SendMessageAsync(Proposal.Mention + ", " + Context.Message.Author.Mention + " wants to marry you. Write `y/yes` to accept or `n/no` to decline. You have 20 seconds to respond.");
+                var response = await WaitForMessage(Proposal, Context.Channel, new TimeSpan(0, 0, 20), new MessageContainsResponsePrecondition("y", "yes", "no", "n"));
+                await Context.Channel.SendMessageAsync(response.ToString());
+
+                if (response.Content.ToString().ToLower() == "y" || response.Content.ToString().ToLower() == "yes")
+                {
+                    await ReplyAsync("The person did the accept");
+                    Satania.db.addMarriage(Context.Message.Author.Id.ToString(), Proposal.Id.ToString());
+                }
+                else if(response.Content.ToString().ToLower() == "n" || response.Content.ToString().ToLower() == "no")
+                {
+                    await ReplyAsync("not accepted");
+                }
+                
+            }
+
+        }
 
     }
 }

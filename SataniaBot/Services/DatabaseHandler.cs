@@ -90,7 +90,7 @@ namespace SataniaBot.Services
 
                 conn.Open();
 
-                var command = new MySqlCommand($"SELECT marriedid FROM userstats where userid = @userid;", conn);
+                var command = new MySqlCommand($"SELECT marriedid FROM usermarriages where userid = @userid;", conn);
                 command.Parameters.AddWithValue("@userid", userid);
 
                 MySqlDataReader reader = command.ExecuteReader();
@@ -113,6 +113,30 @@ namespace SataniaBot.Services
             }
         }
 
+        public void addMarriage(string person1, string person2)
+        {
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = myConnectionString;
 
+            conn.Open();
+
+            var command = new MySqlCommand($"INSERT INTO `usermarriages` (`userid`, `marriedid`) VALUES (@person1, @person2)", conn);
+            command.Parameters.AddWithValue("@person1", person1);
+            command.Parameters.AddWithValue("@person2", person2);
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            conn.Close();
+
+            conn.Open();
+
+            var command2 = new MySqlCommand($"INSERT INTO `usermarriages` (`userid`, `marriedid`) VALUES (@person2, @person1)", conn);
+            command2.Parameters.AddWithValue("@person2", person2);
+            command2.Parameters.AddWithValue("@person1", person1);
+
+            MySqlDataReader reader2 = command2.ExecuteReader();
+
+            conn.Close();
+        }
     }
 }
