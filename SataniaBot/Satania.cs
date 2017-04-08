@@ -41,9 +41,6 @@ namespace SataniaBot
             _client.JoinedGuild += _client_JoinedGuild;
 
             await Task.Delay(5000);
-            Console.WriteLine(_client.Guilds.Count.ToString());
-            Console.WriteLine(_client.Guilds.SelectMany(x => x.Channels).Count());
-            Console.WriteLine(_client.Guilds.SelectMany(x => x.Users).Count());
 
             db.updateWebStats(_client.Guilds.Count, _client.Guilds.SelectMany(x => x.Channels).Count(), _client.Guilds.SelectMany(x => x.Users).Count());
 
