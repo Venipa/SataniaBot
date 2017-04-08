@@ -197,8 +197,8 @@ namespace SataniaBot.Modules
 
 
         [Command("marry", RunMode = RunMode.Async)]
-        [Summary("Shows specified users profile or your own if unspecified")]
-        [Remarks("profile tromodolo")]
+        [Summary("Proposes to marry to specified person")]
+        [Remarks("marry tromodolo")]
         public async Task Marry(IGuildUser Proposal = null)
         {
             if (Proposal == null)
@@ -219,20 +219,57 @@ namespace SataniaBot.Modules
             }
             else
             {
-                await Context.Channel.SendMessageAsync(Proposal.Mention + ", " + Context.Message.Author.Mention + " wants to marry you. Write `y/yes` to accept or `n/no` to decline. You have 20 seconds to respond.");
-                var response = await WaitForMessage(Proposal, Context.Channel, new TimeSpan(0, 0, 20), new MessageContainsResponsePrecondition("y", "yes", "no", "n"));
-                await Context.Channel.SendMessageAsync(response.ToString());
+                await Context.Channel.SendMessageAsync(Proposal.Mention + ", " + Context.Message.Author.Mention + " wants to marry you. Write `y/yes` to accept or `n/no` to decline. You have a minute to respond.");
+                var response = await WaitForMessage(Proposal, Context.Channel, new TimeSpan(0, 0, 60), new MessageContainsResponsePrecondition("y", "yes", "no", "n"));
 
                 if (response.Content.ToString().ToLower() == "y" || response.Content.ToString().ToLower() == "yes")
                 {
-                    await ReplyAsync("The person did the accept");
+                    await ReplyAsync("The person accepted your proposal. :heart:");
                     Satania.db.addMarriage(Context.Message.Author.Id.ToString(), Proposal.Id.ToString());
                 }
                 else if(response.Content.ToString().ToLower() == "n" || response.Content.ToString().ToLower() == "no")
                 {
-                    await ReplyAsync("not accepted");
+                    await ReplyAsync("You got denied. :frowning:");
                 }
                 
+            }
+        }
+
+        [Command("divorce", RunMode = RunMode.Async)]
+        [Summary("Asks to divorce from specified person if married")]
+        [Remarks("divorce tromodolo")]
+        public async Task Divorce(IGuildUser Proposal = null)
+        {
+            if (Proposal == null)
+            {
+                await ReplyAsync("You need to specify a person to divorce.");
+            }
+            else if (string.IsNullOrWhiteSpace(Satania.db.getMarriage(Context.Message.Author.Id.ToString()))) //If column with married is empty for author
+            {
+                await ReplyAsync("You aren't married to anyone.");
+            }
+            else if (string.IsNullOrWhiteSpace(Satania.db.getMarriage(Proposal.Id.ToString()))) // if column with married is empty for target, which should only happen if author isnt empty
+            {
+                await ReplyAsync("You aren't married to that person.");
+            }
+            else if (Context.Message.Author.Id.ToString() != Satania.db.getMarriage(Proposal.Id.ToString())) // should trigger if neither person has empty columns but the targets value doesnt match author id
+            {
+                await ReplyAsync("That person isnt married to you.");
+            }
+            else
+            {
+                await Context.Channel.SendMessageAsync(Proposal.Mention + ", " + Context.Message.Author.Mention + " wants to divorce you. Write `y/yes` to accept or `n/no` to decline. You have a minute to respond.");
+                var response = await WaitForMessage(Proposal, Context.Channel, new TimeSpan(0, 0, 60), new MessageContainsResponsePrecondition("y", "yes", "no", "n"));
+
+                if (response.Content.ToString().ToLower() == "y" || response.Content.ToString().ToLower() == "yes")
+                {
+                    await ReplyAsync("The person accepted the divorce.");
+                    Satania.db.removeMarriage(Context.Message.Author.Id.ToString(), Proposal.Id.ToString());
+                }
+                else if (response.Content.ToString().ToLower() == "n" || response.Content.ToString().ToLower() == "no")
+                {
+                    await ReplyAsync("The person didn't accept the divorce. You are still married.");
+                }
             }
 
         }

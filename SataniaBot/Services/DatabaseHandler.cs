@@ -138,5 +138,31 @@ namespace SataniaBot.Services
 
             conn.Close();
         }
+
+        public void removeMarriage(string person1, string person2)
+        {
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = myConnectionString;
+
+            conn.Open();
+
+            var command = new MySqlCommand($"DELETE FROM `usermarriages` WHERE `userid`=@person1", conn);
+            command.Parameters.AddWithValue("@person1", person1);
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            conn.Close();
+
+            conn.Open();
+
+            var command2 = new MySqlCommand($"DELETE FROM `usermarriages` WHERE `userid`=@person2", conn);
+            command2.Parameters.AddWithValue("@person2", person2);
+
+            MySqlDataReader reader2 = command2.ExecuteReader();
+
+            conn.Close();
+        }
+
+
     }
 }
