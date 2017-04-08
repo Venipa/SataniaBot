@@ -98,7 +98,6 @@ namespace SataniaBot.Modules
             if (m.Success)                                                       //black magic happens
             {
                 String int1 = m.Groups[1].ToString();
-                Console.WriteLine(int1);
                 string imageurl = "https://cdn.discordapp.com/emojis/" + int1.ToString() + ".png";
 
                 EmbedBuilder embed = new EmbedBuilder();

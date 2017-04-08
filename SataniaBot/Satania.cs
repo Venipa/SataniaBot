@@ -3,6 +3,9 @@ using Discord.WebSocket;
 using System;
 using System.Threading.Tasks;
 using SataniaBot.Services;
+using System.Linq;
+using System.Threading;
+
 
 namespace SataniaBot
 {
@@ -37,6 +40,17 @@ namespace SataniaBot
 
             _client.JoinedGuild += _client_JoinedGuild;
 
+            await Task.Delay(5000);
+            Console.WriteLine(_client.Guilds.Count.ToString());
+            Console.WriteLine(_client.Guilds.SelectMany(x => x.Channels).Count());
+            Console.WriteLine(_client.Guilds.SelectMany(x => x.Users).Count());
+
+            db.updateWebStats(_client.Guilds.Count, _client.Guilds.SelectMany(x => x.Channels).Count(), _client.Guilds.SelectMany(x => x.Users).Count());
+
+            AutoResetEvent _autoEvent = null;
+
+            Timer updateTimer = new Timer(UpdateStats, _autoEvent, 60000, 60000);
+
             await Task.Delay(-1);                            // Prevent the console window from closing.
         }
 
@@ -45,5 +59,11 @@ namespace SataniaBot
             db.addServer(arg);
             await arg.DownloadUsersAsync();             //only reason i have this here is because the task threw a fit because i didnt have any return value
         }
+
+        public void UpdateStats(Object stateInfo)
+        {
+            db.updateWebStats(_client.Guilds.Count, _client.Guilds.SelectMany(x => x.Channels).Count(), _client.Guilds.SelectMany(x => x.Users).Count());
+        }
+
     }
 }
