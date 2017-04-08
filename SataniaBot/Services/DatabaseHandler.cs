@@ -163,6 +163,23 @@ namespace SataniaBot.Services
             conn.Close();
         }
 
+        public void updateWebStats(int servernum, int channelnum, int usernum)
+        {
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = myConnectionString;
+
+            conn.Open();
+
+            var command = new MySqlCommand($"UPDATE `usagestats` SET `servercount`=@server, `channelcount`=@channels, `usercount`=@user;", conn);
+            command.Parameters.AddWithValue("@server", servernum);
+            command.Parameters.AddWithValue("@channels", channelnum);
+            command.Parameters.AddWithValue("@user", usernum);
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            conn.Close();
+        }
+
 
     }
 }
