@@ -138,9 +138,9 @@ namespace SataniaBot.Modules
 
             EmbedAuthorBuilder AuthorBuilder = new EmbedAuthorBuilder();
             AuthorBuilder.Name = User.Username;
-            AuthorBuilder.IconUrl = User.GetAvatarUrl(AvatarFormat.Gif);
+            AuthorBuilder.IconUrl = User.GetAvatarUrl();
             if(isMarried == true)
-                embed.ThumbnailUrl = MarriedPerson.GetAvatarUrl(AvatarFormat.Gif);
+                embed.ThumbnailUrl = MarriedPerson?.GetAvatarUrl();
             embed.Author = AuthorBuilder;
 
             //username
@@ -155,7 +155,7 @@ namespace SataniaBot.Modules
             MarriedField.IsInline = true;
             MarriedField.Name = "Married to:";
             if (isMarried == true)
-                MarriedField.Value = MarriedPerson.Username + "#" + MarriedPerson.Discriminator;
+                MarriedField.Value = MarriedPerson?.Username + "#" + MarriedPerson?.Discriminator;
             else
                 MarriedField.Value = "No one";
             embed.AddField(MarriedField);
