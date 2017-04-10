@@ -65,6 +65,7 @@ namespace SataniaBot.Modules
         [Remarks("love tromo jessica")]
         public async Task Love(string User1, [Remainder] string User2 = null)
         {
+            EmbedBuilder builder = new EmbedBuilder();
             string PersonOne = User1;       //note to self: define most things outside for(),foreach() and while() loops unless the variable wont be needed
             string PersonTwo = User2;
             int SecondName = 0;
@@ -84,8 +85,27 @@ namespace SataniaBot.Modules
 
             Random rngseed = new Random(Seed);
             var LoveChance = (rngseed.Next(1, 100));
+            // original color value is (219, 91, 255) 
 
-            await ReplyAsync("The Love between " + PersonOne + " and " + PersonTwo + " is " + $"{LoveChance}" + "%");
+            double RcolorFound = 219 / 100 * LoveChance;
+            double GcolorFound = 91 / 100 * LoveChance;
+            double BcolorFound = 255 / 100 * LoveChance;
+
+            /*Console.WriteLine(RcolorFound); 
+            Console.WriteLine(GcolorFound); 
+            Console.WriteLine(BcolorFound);*/
+
+            int Rcolor = Convert.ToInt16(Math.Floor(RcolorFound));
+            int Gcolor = Convert.ToInt16(Math.Floor(GcolorFound));
+            int Bcolor = Convert.ToInt16(Math.Floor(BcolorFound));
+
+            //Console.WriteLine(Rcolor + "," + Gcolor + "," + Bcolor); 
+            //await ReplyAsync($"{RcolorFound}" + $",{GcolorFound}" + $",{BcolorFound}"); 
+
+            builder.Description = ("The Love between " + PersonOne + " and " + PersonTwo + " is " + $"{LoveChance}" + "%");
+            builder.Color = new Color((byte)Rcolor, (byte)Gcolor, (byte)Bcolor);
+
+            await ReplyAsync("", embed: builder);
         }
 
         [Command("emote")]
