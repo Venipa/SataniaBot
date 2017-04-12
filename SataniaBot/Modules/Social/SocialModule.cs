@@ -38,9 +38,14 @@ namespace SataniaBot.Modules
         [Remarks("rng")]
         public async Task Random(int MaxValue = 0, [Remainder] int MinValue = 0)
         {
+            EmbedBuilder error = new EmbedBuilder();
+            EmbedBuilder success = new EmbedBuilder();
             if (MaxValue < 0 || MinValue < 0)
             {
-                await ReplyAsync("The number(s) have to be above 0");
+                
+                error.Title = "The number(s) have to be above 0";
+                error.Color = new Color(153,12,12);
+                await ReplyAsync("", embed: error);
                 return;
             }
 
@@ -56,8 +61,11 @@ namespace SataniaBot.Modules
 
             //await ReplyAsync("MinVal : "+$"{MinValue}"+" MaxVal : " + $"{MaxValue}");         test the numbers here
             Random rng = new Random();
-            var RandomNumber = (rng.Next(MinValue,MaxValue));
-            await ReplyAsync("Your random number is : " + $"{RandomNumber}");
+            var RandomNumber = (rng.Next(MinValue,MaxValue));           
+            success.Title = "Your random number is : " + $"{RandomNumber}";
+            success.Color = new Color(82, 198, 25);
+            await ReplyAsync("", embed: success);
+
         }
 
         [Command("love")]
@@ -87,17 +95,9 @@ namespace SataniaBot.Modules
             var LoveChance = (rngseed.Next(1, 100));
             // original color value is (219, 91, 255) 
 
-            double RcolorFound = 219 / 100 * LoveChance;
-            double GcolorFound = 91 / 100 * LoveChance;
-            double BcolorFound = 255 / 100 * LoveChance;
-
-            /*Console.WriteLine(RcolorFound); 
-            Console.WriteLine(GcolorFound); 
-            Console.WriteLine(BcolorFound);*/
-
-            int Rcolor = Convert.ToInt16(Math.Floor(RcolorFound));
-            int Gcolor = Convert.ToInt16(Math.Floor(GcolorFound));
-            int Bcolor = Convert.ToInt16(Math.Floor(BcolorFound));
+            double Rcolor = 219 / 100 * LoveChance;
+            double Gcolor = 91 / 100 * LoveChance;
+            double Bcolor = 255 / 100 * LoveChance;
 
             //Console.WriteLine(Rcolor + "," + Gcolor + "," + Bcolor); 
             //await ReplyAsync($"{RcolorFound}" + $",{GcolorFound}" + $",{BcolorFound}"); 
