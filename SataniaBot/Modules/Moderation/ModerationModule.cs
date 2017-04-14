@@ -10,8 +10,8 @@ using System.Threading.Tasks;
 
 namespace SataniaBot.Modules
 {
-    [Name("Admin")]
-    public class AdminModule : ModuleBase<SocketCommandContext>
+    [Name("Moderation")]
+    public class ModerationModule : ModuleBase<SocketCommandContext>
     {
         
         [Command("setprefix")]
