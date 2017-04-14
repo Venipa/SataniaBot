@@ -63,6 +63,25 @@ namespace SataniaBot.Modules
             }
         }
 
+        [Command("setgame")]
+        [Summary("Sets game playing status")]
+        [Remarks("#setgame with fire")]
+        [RequireOwner()]
+        public async Task SetGame(string Game = null)
+        {
+            EmbedBuilder builder = new EmbedBuilder();
+
+            if (Game == null)
+                Game = "";
+
+            await Satania._client.SetGameAsync(Game);
+
+            builder.Description = "Username successfully changed. :ok_hand:";
+            builder.Color = new Color(111, 237, 69);
+
+            await ReplyAsync("", embed: builder);
+        }
+
         [Command("setname")]
         [Summary("Sets name of bot to name given")]
         [Remarks("#setname Donald Trump")]
