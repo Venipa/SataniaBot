@@ -39,12 +39,12 @@ namespace SataniaBot.Services
                     return result;
                 }
                 conn.Close();
-                return null;
+                return "";
             }
             catch (Exception e)
             {
                 Console.WriteLine(e.Message);
-                return null;
+                return "";
             }
         }
 
@@ -72,7 +72,7 @@ namespace SataniaBot.Services
 
             conn.Open();
 
-            var command = new MySqlCommand($"INSERT INTO `serversettings` (`serverid`, `commandprefix`) VALUES (@guildid', '!')", conn);
+            var command = new MySqlCommand($"INSERT INTO `serversettings` (`serverid`, `commandprefix`) VALUES (@guildid', '')", conn);
             command.Parameters.AddWithValue("@guildid", s.Id);
 
             MySqlDataReader reader = command.ExecuteReader();
