@@ -67,7 +67,7 @@ namespace SataniaBot.Modules
         [Summary("Sets game playing status")]
         [Remarks("#setgame with fire")]
         [RequireOwner()]
-        public async Task SetGame(string Game = null)
+        public async Task SetGame([Remainder]string Game = null)
         {
             EmbedBuilder builder = new EmbedBuilder();
 
@@ -76,7 +76,7 @@ namespace SataniaBot.Modules
 
             await Satania._client.SetGameAsync(Game);
 
-            builder.Description = "Username successfully changed. :ok_hand:";
+            builder.Description = "Set game to: " + Game;
             builder.Color = new Color(111, 237, 69);
 
             await ReplyAsync("", embed: builder);
