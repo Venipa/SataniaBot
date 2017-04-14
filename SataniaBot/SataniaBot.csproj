@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <Folder Include="Help\Modules\" />
-    <Folder Include="Modules\Owner\" />
   </ItemGroup>
 
 </Project>
