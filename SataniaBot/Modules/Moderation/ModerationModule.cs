@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
@@ -89,9 +90,18 @@ namespace SataniaBot.Modules
         public async Task Prune(int PruneNumber = 10)
         {
             EmbedBuilder builder = new EmbedBuilder();
-            var msgs = Context.Channel.GetCachedMessages(PruneNumber + 1);       //only gets cached messages at the moment, will get fixed
 
-            await Context.Channel.DeleteMessagesAsync(msgs);
+            if (PruneNumber > 100)
+            {
+                PruneNumber = 100;
+            }
+
+            var Messages = (await Context.Channel.GetMessagesAsync(PruneNumber + 1).Flatten().ConfigureAwait(false));
+            if (Messages.FirstOrDefault()?.Id == Context.Message.Id)
+                Messages = Messages.Skip(1).ToArray();
+            else
+                Messages = Messages.Take(PruneNumber);
+            await Context.Channel.DeleteMessagesAsync(Messages).ConfigureAwait(false);
 
             builder.Description = $"{Context.Message.Author.Mention}\n{PruneNumber} messages were pruned";
             builder.Color = new Color(111, 237, 69);
