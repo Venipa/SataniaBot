@@ -14,7 +14,7 @@ namespace SataniaBot.Modules
     {
         [Command("say")]
         [Summary("Echos a message")]
-        [Remarks("say hi")]
+        [Remarks("#say hi")]
         public async Task Say([Remainder] string EchoMessage = null)
         {
             if(EchoMessage == null)
@@ -27,7 +27,7 @@ namespace SataniaBot.Modules
 
         [Command("ping")]
         [Summary("Pong!")]
-        [Remarks("ping")]
+        [Remarks("#ping")]
         public async Task Say()
         {
             await ReplyAsync("Pong!");
@@ -35,7 +35,7 @@ namespace SataniaBot.Modules
 
         [Command("rng")]
         [Summary("Generates random number between 1-100")]
-        [Remarks("rng")]
+        [Remarks("#rng")]
         public async Task Random(int MaxValue = 0, [Remainder] int MinValue = 0)
         {
             EmbedBuilder error = new EmbedBuilder();
@@ -70,7 +70,7 @@ namespace SataniaBot.Modules
 
         [Command("love")]
         [Summary("\"Generates\" love between two people")]
-        [Remarks("love tromo jessica")]
+        [Remarks("#love tromo jessica")]
         public async Task Love(string User1, [Remainder] string User2 = null)
         {
             EmbedBuilder builder = new EmbedBuilder();
@@ -110,7 +110,7 @@ namespace SataniaBot.Modules
 
         [Command("emote")]
         [Summary("Sends full size image of an emote")]
-        [Remarks("emote meguButt")]
+        [Remarks("#emote meguButt")]
         public async Task Emote(string emote)
         {
             Regex r = new Regex("\\:(\\d.*?[0-9])\\>", RegexOptions.IgnoreCase); //using regex to match the id between the : and > in the emote code
@@ -135,7 +135,7 @@ namespace SataniaBot.Modules
 
         [Command("profile")]
         [Summary("Shows specified users profile or your own if unspecified")]
-        [Remarks("profile tromodolo")]
+        [Remarks("#profile tromodolo")]
         public async Task Profile(IGuildUser User = null)
         {
             if(User == null)
@@ -217,7 +217,7 @@ namespace SataniaBot.Modules
 
         [Command("marry", RunMode = RunMode.Async)]
         [Summary("Proposes to marry to specified person")]
-        [Remarks("marry tromodolo")]
+        [Remarks("#marry tromodolo")]
         public async Task Marry(IGuildUser Proposal = null)
         {
             if (Proposal == null)
@@ -256,7 +256,7 @@ namespace SataniaBot.Modules
 
         [Command("divorce", RunMode = RunMode.Async)]
         [Summary("Asks to divorce from specified person if married")]
-        [Remarks("divorce tromodolo")]
+        [Remarks("#divorce tromodolo")]
         public async Task Divorce(IGuildUser Proposal = null)
         {
             if (Proposal == null)

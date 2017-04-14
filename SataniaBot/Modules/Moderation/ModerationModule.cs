@@ -16,7 +16,7 @@ namespace SataniaBot.Modules
         
         [Command("setprefix")]
         [Summary("Sets server prefix")]
-        [Remarks("setprefix ~")]
+        [Remarks("#setprefix ~")]
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task SetPrefix(string Prefix)
         {
@@ -26,7 +26,7 @@ namespace SataniaBot.Modules
 
         [Command("ban")]
         [Summary("Bans a user from the server and deletes last week of messages")]
-        [Remarks("ban reddeyez")]
+        [Remarks("#ban reddeyez")]
         [RequireBotPermission(GuildPermission.BanMembers)]
         [RequireUserPermission(GuildPermission.BanMembers)]
         public async Task Ban(SocketGuildUser BanUser = null)
@@ -54,7 +54,7 @@ namespace SataniaBot.Modules
 
         [Command("kick")]
         [Summary("Kicks a user from the server")]
-        [Remarks("kick kbuns")]
+        [Remarks("#kick kbuns")]
         [RequireBotPermission(GuildPermission.KickMembers)]
         [RequireUserPermission(GuildPermission.KickMembers)]
         public async Task Kick(SocketGuildUser KickUser = null)
@@ -83,7 +83,7 @@ namespace SataniaBot.Modules
 
         [Command("prune")]
         [Summary("Prunes number of messages you want, up to 100")]
-        [Remarks("prune 27")]
+        [Remarks("#prune 27")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task Prune(int PruneNumber = 10)
