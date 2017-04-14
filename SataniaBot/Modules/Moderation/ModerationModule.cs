@@ -5,96 +5,19 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 
 namespace SataniaBot.Modules
 {
-    [Name("Admin")]
-    public class AdminModule : ModuleBase<SocketCommandContext>
+    [Name("Moderation")]
+    public class ModerationModule : ModuleBase<SocketCommandContext>
     {
-
-        [Command("die")]
-        [Summary("Tactical kill switch")]
-        [Remarks("die")]
-        [RequireOwner()]
-        public async Task Die()
-        {
-            await ReplyAsync("Sorry if I did anything wrong. :(");
-
-            Environment.Exit(0);
-
-        }
-
-        [Command("setavatar")]
-        [Summary("Sets avatar to image url")]
-        [Remarks("setavatar URL")]
-        [RequireOwner()]
-        public async Task SetAvatar(string AvatarURL = null)
-        {
-            if (AvatarURL == null)
-                return;
-
-            EmbedBuilder builder = new EmbedBuilder();
-            var http = new HttpClient();
-
-            try
-            {
-                using (var stream = await http.GetStreamAsync(AvatarURL))
-                {
-                    var imgStream = new MemoryStream();
-                    await stream.CopyToAsync(imgStream);
-                    imgStream.Position = 0;
-
-                    await Satania._client.CurrentUser.ModifyAsync(u => u.Avatar = new Image(imgStream)).ConfigureAwait(false);
-
-                    builder.Description = "Profile picture successfully changed :ok_hand:";
-                    builder.Color = new Color(111, 237, 69);
-
-                    await ReplyAsync("", embed: builder);
-                }
-            }
-            catch
-            {
-                builder.Description = "Could not change profile picture to url, please try again later.";
-                builder.Color = new Color(222, 90, 47);
-
-                await ReplyAsync("", embed: builder);
-            }
-        }
-
-        [Command("setname")]
-        [Summary("Sets name of bot to name given")]
-        [Remarks("setname Donald Trump")]
-        [RequireOwner()]
-        public async Task SetName([Remainder] string Name = null)
-        {
-
-            EmbedBuilder builder = new EmbedBuilder();
-
-            if (Name == null)
-                return;
-
-            try { 
-                await Satania._client.CurrentUser.ModifyAsync(x => x.Username = Name);
-
-                builder.Description = "Username successfully changed. :ok_hand:";
-                builder.Color = new Color(111, 237, 69);
-
-                await ReplyAsync("", embed: builder);
-            }
-            catch
-            {
-                builder.Description = "Something went wrong when trying to change username, please try again later.";
-                builder.Color = new Color(222, 90, 47);
-
-                await ReplyAsync("", embed: builder);
-            }
-        }
-
+        
         [Command("setprefix")]
         [Summary("Sets server prefix")]
-        [Remarks("setprefix ~")]
+        [Remarks("#setprefix ~")]
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task SetPrefix(string Prefix)
         {
@@ -104,7 +27,7 @@ namespace SataniaBot.Modules
 
         [Command("ban")]
         [Summary("Bans a user from the server and deletes last week of messages")]
-        [Remarks("ban reddeyez")]
+        [Remarks("#ban reddeyez")]
         [RequireBotPermission(GuildPermission.BanMembers)]
         [RequireUserPermission(GuildPermission.BanMembers)]
         public async Task Ban(SocketGuildUser BanUser = null)
@@ -132,7 +55,7 @@ namespace SataniaBot.Modules
 
         [Command("kick")]
         [Summary("Kicks a user from the server")]
-        [Remarks("kick kbuns")]
+        [Remarks("#kick kbuns")]
         [RequireBotPermission(GuildPermission.KickMembers)]
         [RequireUserPermission(GuildPermission.KickMembers)]
         public async Task Kick(SocketGuildUser KickUser = null)
@@ -161,15 +84,24 @@ namespace SataniaBot.Modules
 
         [Command("prune")]
         [Summary("Prunes number of messages you want, up to 100")]
-        [Remarks("prune 27")]
+        [Remarks("#prune 27")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task Prune(int PruneNumber = 10)
         {
             EmbedBuilder builder = new EmbedBuilder();
-            var msgs = Context.Channel.GetCachedMessages(PruneNumber + 1);       //only gets cached messages at the moment, will get fixed
 
-            await Context.Channel.DeleteMessagesAsync(msgs);
+            if (PruneNumber > 100)
+            {
+                PruneNumber = 100;
+            }
+
+            var Messages = (await Context.Channel.GetMessagesAsync(PruneNumber + 1).Flatten().ConfigureAwait(false));
+            if (Messages.FirstOrDefault()?.Id == Context.Message.Id)
+                Messages = Messages.Skip(1).ToArray();
+            else
+                Messages = Messages.Take(PruneNumber);
+            await Context.Channel.DeleteMessagesAsync(Messages).ConfigureAwait(false);
 
             builder.Description = $"{Context.Message.Author.Mention}\n{PruneNumber} messages were pruned";
             builder.Color = new Color(111, 237, 69);
