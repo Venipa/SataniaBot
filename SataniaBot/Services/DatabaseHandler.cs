@@ -72,7 +72,7 @@ namespace SataniaBot.Services
 
             conn.Open();
 
-            var command = new MySqlCommand($"INSERT INTO `serversettings` (`serverid`, `commandprefix`) VALUES (@guildid', '#')", conn);
+            var command = new MySqlCommand($"INSERT INTO `serversettings` (`serverid`, `commandprefix`) VALUES (@guildid', 's?')", conn);
             command.Parameters.AddWithValue("@guildid", s.Id);
 
             MySqlDataReader reader = command.ExecuteReader();

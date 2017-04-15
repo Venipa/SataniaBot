@@ -36,7 +36,7 @@ namespace SataniaBot.Services
             int argPos = 0;                                           // Check if the message has either a string or mention prefix.
             if (msg.HasStringPrefix(serverPrefix, ref argPos) ||
                 msg.HasMentionPrefix(_client.CurrentUser, ref argPos) ||
-                msg.HasStringPrefix("#", ref argPos))
+                msg.HasStringPrefix("s?", ref argPos))
             {                                                         // Try and execute a command with the given context.
                 var result = await _cmds.ExecuteAsync(context, argPos);
                 if (result.IsSuccess)
