@@ -6,6 +6,7 @@ using Discord;
 using System.Linq;
 using Discord.WebSocket;
 using Discord.Addons.InteractiveCommands;
+using SataniaBot.Services.EmbedExtensions;
 
 namespace SataniaBot.Modules
 {
@@ -36,16 +37,11 @@ namespace SataniaBot.Modules
         [Command("rng")]
         [Summary("Generates random number between 1-100")]
         [Remarks("#rng")]
-        public async Task Random(int MaxValue = 0, [Remainder] int MinValue = 0)
+        public async Task Random(int MaxValue = 0, int MinValue = 0)
         {
-            EmbedBuilder error = new EmbedBuilder();
-            EmbedBuilder success = new EmbedBuilder();
             if (MaxValue < 0 || MinValue < 0)
             {
-                
-                error.Title = "The number(s) have to be above 0";
-                error.Color = new Color(153,12,12);
-                await ReplyAsync("", embed: error);
+                await Context.Channel.SendErrorAsync("The number(s) have to be above 0");
                 return;
             }
 
@@ -61,11 +57,8 @@ namespace SataniaBot.Modules
 
             //await ReplyAsync("MinVal : "+$"{MinValue}"+" MaxVal : " + $"{MaxValue}");         test the numbers here
             Random rng = new Random();
-            var RandomNumber = (rng.Next(MinValue,MaxValue));           
-            success.Title = "Your random number is : " + $"{RandomNumber}";
-            success.Color = new Color(82, 198, 25);
-            await ReplyAsync("", embed: success);
-
+            var RandomNumber = (rng.Next(MinValue,MaxValue));
+            await Context.Channel.SendConfirmAsync("Your random number is : " + $"{RandomNumber}");
         }
 
         [Command("love")]
@@ -73,7 +66,6 @@ namespace SataniaBot.Modules
         [Remarks("#love tromo jessica")]
         public async Task Love(string User1, [Remainder] string User2 = null)
         {
-            EmbedBuilder builder = new EmbedBuilder();
             string PersonOne = User1;       //note to self: define most things outside for(),foreach() and while() loops unless the variable wont be needed
             string PersonTwo = User2;
             int SecondName = 0;
@@ -102,10 +94,9 @@ namespace SataniaBot.Modules
             //Console.WriteLine(Rcolor + "," + Gcolor + "," + Bcolor); 
             //await ReplyAsync($"{RcolorFound}" + $",{GcolorFound}" + $",{BcolorFound}"); 
 
-            builder.Description = ("The Love between " + PersonOne + " and " + PersonTwo + " is " + $"{LoveChance}" + "%");
-            builder.Color = new Color((byte)Rcolor, (byte)Gcolor, (byte)Bcolor);
+            Color LoveColor = new Color((byte)Rcolor, (byte)Gcolor, (byte)Bcolor);
 
-            await ReplyAsync("", embed: builder);
+            await Context.Channel.SendColouredEmbedAsync("The Love between " + PersonOne + " and " + PersonTwo + " is " + $"{LoveChance}" + "%", LoveColor);
         }
 
         [Command("emote")]
@@ -120,11 +111,7 @@ namespace SataniaBot.Modules
                 String int1 = m.Groups[1].ToString();
                 string imageurl = "https://cdn.discordapp.com/emojis/" + int1.ToString() + ".png";
 
-                EmbedBuilder embed = new EmbedBuilder();
-                embed.ImageUrl = imageurl;
-
-                await ReplyAsync("", embed: embed);
-
+                await Context.Channel.SendImageEmbedAsync(imageurl);
             }
             else
             {

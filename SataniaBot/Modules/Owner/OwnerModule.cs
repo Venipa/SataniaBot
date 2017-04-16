@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SataniaBot.Services.EmbedExtensions;
 
 namespace SataniaBot.Modules
 {
@@ -23,7 +24,6 @@ namespace SataniaBot.Modules
             await ReplyAsync("Sorry if I did anything wrong. :(");
 
             Environment.Exit(0);
-
         }
 
         [Command("setavatar")]
@@ -35,7 +35,6 @@ namespace SataniaBot.Modules
             if (AvatarURL == null)
                 return;
 
-            EmbedBuilder builder = new EmbedBuilder();
             var http = new HttpClient();
 
             try
@@ -45,21 +44,15 @@ namespace SataniaBot.Modules
                     var imgStream = new MemoryStream();
                     await stream.CopyToAsync(imgStream);
                     imgStream.Position = 0;
-
+                    
                     await Satania._client.CurrentUser.ModifyAsync(u => u.Avatar = new Image(imgStream)).ConfigureAwait(false);
 
-                    builder.Description = "Profile picture successfully changed :ok_hand:";
-                    builder.Color = new Color(111, 237, 69);
-
-                    await ReplyAsync("", embed: builder);
+                    await Context.Channel.SendConfirmAsync("Profile picture successfully changed :ok_hand:");
                 }
             }
             catch
             {
-                builder.Description = "Could not change profile picture to url, please try again later.";
-                builder.Color = new Color(222, 90, 47);
-
-                await ReplyAsync("", embed: builder);
+                await Context.Channel.SendErrorAsync("Could not change profile picture to url, please try again later.");
             }
         }
 
@@ -69,17 +62,10 @@ namespace SataniaBot.Modules
         [RequireOwner()]
         public async Task SetGame([Remainder]string Game = null)
         {
-            EmbedBuilder builder = new EmbedBuilder();
-
             if (Game == null)
                 Game = "";
 
-            await Satania._client.SetGameAsync(Game);
-
-            builder.Description = "Set game to: " + Game;
-            builder.Color = new Color(111, 237, 69);
-
-            await ReplyAsync("", embed: builder);
+            await Context.Channel.SendConfirmAsync("Set game to: " + Game);
         }
 
         [Command("setname")]
@@ -88,9 +74,6 @@ namespace SataniaBot.Modules
         [RequireOwner()]
         public async Task SetName([Remainder] string Name = null)
         {
-
-            EmbedBuilder builder = new EmbedBuilder();
-
             if (Name == null)
                 return;
 
@@ -98,17 +81,11 @@ namespace SataniaBot.Modules
             {
                 await Satania._client.CurrentUser.ModifyAsync(x => x.Username = Name);
 
-                builder.Description = "Username successfully changed. :ok_hand:";
-                builder.Color = new Color(111, 237, 69);
-
-                await ReplyAsync("", embed: builder);
+                await Context.Channel.SendConfirmAsync("Username successfully changed. :ok_hand:");
             }
             catch
             {
-                builder.Description = "Something went wrong when trying to change username, please try again later.";
-                builder.Color = new Color(222, 90, 47);
-
-                await ReplyAsync("", embed: builder);
+                await Context.Channel.SendErrorAsync("Something went wrong when trying to change username, please try again later.");
             }
         }
     }

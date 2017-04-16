@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
+using SataniaBot.Services.EmbedExtensions;
 
 namespace SataniaBot.Modules
 {
@@ -22,7 +23,7 @@ namespace SataniaBot.Modules
         public async Task SetPrefix(string Prefix)
         {
             Satania.db.updatePrefix(Context.Guild, Prefix);
-            await ReplyAsync("New prefix set to: " + Prefix);
+            await ReplyAsync("New prefix set to: `" + Prefix + "`");
         }
 
         [Command("ban")]
@@ -39,17 +40,11 @@ namespace SataniaBot.Modules
             {
                 await Context.Guild.AddBanAsync(BanUser, 1);
 
-                builder.Description = $"{Context.Message.Author.Mention}\n {BanUser} was banned from this server.";
-                builder.Color = new Color(111, 237, 69);
-
-                await ReplyAsync("", embed: builder);
+                await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n {BanUser} was banned from this server.");
             }
             catch
             {
-                builder.Description = $"{Context.Message.Author.Mention}\n {BanUser} could not be banned from this server.";
-                builder.Color = new Color(222, 90, 47);
-
-                await ReplyAsync("", embed: builder);
+                await Context.Channel.SendErrorAsync($"{Context.Message.Author.Mention}\n {BanUser} was banned from this server.");
             }
         }
 
@@ -67,19 +62,12 @@ namespace SataniaBot.Modules
             {
                 await KickUser.KickAsync();
 
-                builder.Description = $"{Context.Message.Author.Mention}\n {KickUser} was kicked from this server.";
-                builder.Color = new Color(111, 237, 69);
-
-                await ReplyAsync("", embed: builder);
+                await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n {KickUser} was kicked from this server.");
             }
             catch
             {
-                builder.Description = $"{Context.Message.Author.Mention}\n {KickUser} could not be kicked from this server.";
-                builder.Color = new Color(222, 90, 47);
-
-                await ReplyAsync("", embed: builder);
+                await Context.Channel.SendErrorAsync($"{Context.Message.Author.Mention}\n {KickUser} was kicked from this server.");
             }
-
         }
 
         [Command("prune")]
@@ -103,11 +91,7 @@ namespace SataniaBot.Modules
                 Messages = Messages.Take(PruneNumber);
             await Context.Channel.DeleteMessagesAsync(Messages).ConfigureAwait(false);
 
-            builder.Description = $"{Context.Message.Author.Mention}\n{PruneNumber} messages were pruned";
-            builder.Color = new Color(111, 237, 69);
-
-            await ReplyAsync("", embed: builder);
-
+            await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n{PruneNumber} messages were pruned");
         }
 
     }
