@@ -20,10 +20,21 @@ namespace SataniaBot.Modules
         [Summary("Sets server prefix")]
         [Remarks("#setprefix ~")]
         [RequireUserPermission(GuildPermission.Administrator)]
-        public async Task SetPrefix(string Prefix)
+        public async Task SetPrefix(string Prefix = null)
         {
-            Satania.db.updatePrefix(Context.Guild, Prefix);
-            await ReplyAsync("New prefix set to: `" + Prefix + "`");
+            if (Prefix == null)
+            {
+                await Context.Channel.SendErrorAsync("You need to specify a prefix at least 1 character long.");
+            }
+            else if (Prefix.Length > 10)
+            {
+                await Context.Channel.SendErrorAsync("The prefix can't be longer than 10 characters long.");
+            }
+            else
+            {
+                Satania.db.updatePrefix(Context.Guild, Prefix);
+                await Context.Channel.SendConfirmAsync("New prefix set to: `" + Prefix + "`");
+            }
         }
 
         [Command("ban")]
