@@ -33,18 +33,30 @@ namespace SataniaBot.Modules
         [RequireUserPermission(GuildPermission.BanMembers)]
         public async Task Ban(SocketGuildUser BanUser = null)
         {
-
-            EmbedBuilder builder = new EmbedBuilder();
-
-            try
+            if (BanUser == null)
             {
-                await Context.Guild.AddBanAsync(BanUser, 1);
-
-                await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n {BanUser} was banned from this server.");
+                await Context.Channel.SendErrorAsync("You need to specify a user to ban.");
             }
-            catch
+            else if (BanUser == Context.Message.Author)
             {
-                await Context.Channel.SendErrorAsync($"{Context.Message.Author.Mention}\n {BanUser} was banned from this server.");
+                await Context.Channel.SendErrorAsync("You can't ban yourself.");
+            }
+            else if (BanUser.Hierarchy > (Context.Message.Author as SocketGuildUser).Hierarchy)
+            {
+                await Context.Channel.SendErrorAsync("You can't ban someone with a role higher than you.");
+            }
+            else
+            {
+                try
+                {
+                    await Context.Guild.AddBanAsync(BanUser, 1);
+
+                    await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n {BanUser} was banned from this server.");
+                }
+                catch
+                {
+                    await Context.Channel.SendErrorAsync($"{Context.Message.Author.Mention}\n {BanUser} was banned from this server.");
+                }
             }
         }
 
@@ -55,18 +67,29 @@ namespace SataniaBot.Modules
         [RequireUserPermission(GuildPermission.KickMembers)]
         public async Task Kick(SocketGuildUser KickUser = null)
         {
-
-            EmbedBuilder builder = new EmbedBuilder();
-
-            try
+            if (KickUser == null)
             {
-                await KickUser.KickAsync();
-
-                await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n {KickUser} was kicked from this server.");
+                await Context.Channel.SendErrorAsync("You need to specify a user to kick.");
             }
-            catch
+            else if (KickUser == Context.Message.Author)
             {
-                await Context.Channel.SendErrorAsync($"{Context.Message.Author.Mention}\n {KickUser} was kicked from this server.");
+                await Context.Channel.SendErrorAsync("You can't kick yourself.");
+            }
+            else if (KickUser.Hierarchy > (Context.Message.Author as SocketGuildUser).Hierarchy)
+            {
+                await Context.Channel.SendErrorAsync("You can't kick someone with a role higher than you.");
+            }
+            else {
+                try
+                {
+                    await KickUser.KickAsync();
+
+                    await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n {KickUser} was kicked from this server.");
+                }
+                catch
+                {
+                    await Context.Channel.SendErrorAsync($"{Context.Message.Author.Mention}\n {KickUser} was kicked from this server.");
+                }
             }
         }
 
@@ -77,8 +100,6 @@ namespace SataniaBot.Modules
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task Prune(int PruneNumber = 10)
         {
-            EmbedBuilder builder = new EmbedBuilder();
-
             if (PruneNumber > 100)
             {
                 PruneNumber = 100;
@@ -93,6 +114,5 @@ namespace SataniaBot.Modules
 
             await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n{PruneNumber} messages were pruned");
         }
-
     }
 }
