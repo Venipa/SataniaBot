@@ -1,6 +1,7 @@
 ﻿using System;
 using MySql.Data.MySqlClient;
 using Discord.WebSocket;
+using System.Linq;
 
 namespace SataniaBot.Services
 {
@@ -77,6 +78,8 @@ namespace SataniaBot.Services
             MySqlDataReader reader = command.ExecuteReader();
 
             conn.Close();
+
+            updateWebStats(Satania._client.Guilds.Count, Satania._client.Guilds.SelectMany(x => x.Channels).Count(), Satania._client.Guilds.SelectMany(x => x.Users).Count());
 
             return;
         }
