@@ -28,7 +28,7 @@ namespace SataniaBot.Services
             var msg = s as SocketUserMessage;
             if (msg == null)                                          // Check if the received message is from a user.
                 return;
-            if(string.IsNullOrWhiteSpace(serverPrefix))
+            if(s.Author.IsBot)                                        // Check if the author of the message is a bot.
                 return;
 
             var context = new SocketCommandContext(_client, msg);     // Create a new command context.
