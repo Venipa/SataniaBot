@@ -72,12 +72,13 @@ namespace SataniaBot.Services
 
             conn.Open();
 
-            var command = new MySqlCommand($"INSERT INTO `serversettings` (`serverid`, `commandprefix`) VALUES (@guildid', 's?')", conn);
-            command.Parameters.AddWithValue("@guildid", s.Id);
+            var command = new MySqlCommand($"INSERT INTO `serversettings` (`serverid`, `commandprefix`) VALUES ({s.DefaultChannel.Id.ToString()}, 's?')", conn);
 
             MySqlDataReader reader = command.ExecuteReader();
 
             conn.Close();
+
+            return;
         }
 
         public string getMarriage(string userid)
