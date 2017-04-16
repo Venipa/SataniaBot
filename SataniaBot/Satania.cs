@@ -50,7 +50,6 @@ namespace SataniaBot
         private async Task _client_JoinedGuild(SocketGuild arg)
         {
             db.addServer(arg);
-            await arg.DownloadUsersAsync();             //only reason i have this here is because the task threw a fit because i didnt have any return value
         }
     }
 }
