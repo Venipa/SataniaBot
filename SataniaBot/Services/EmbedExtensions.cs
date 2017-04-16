@@ -7,9 +7,9 @@ using System.Linq;
 using Discord.WebSocket;
 using Discord.Addons.InteractiveCommands;
 
-namespace SataniaBot.Services.EmbedHelper
+namespace SataniaBot.Services.EmbedExtensions
 {
-    public static class EmbedHelper
+    public static class EmbedExtensions
     {
         public static async Task SendConfirmAsync(this IMessageChannel Channel, string message)
         {
