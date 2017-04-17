@@ -125,5 +125,24 @@ namespace SataniaBot.Modules
 
             await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n{PruneNumber} messages were pruned");
         }
+
+
+        [Command("togglensfw")]
+        [Summary("Sets server prefix")]
+        [Remarks("#setprefix ~")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        public async Task ToggleNSFW()
+        {
+            if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
+            {
+                Satania.db.removeNsfwChannel(Context.Channel.Id.ToString());
+                await Context.Channel.SendErrorAsync("Channel has been removed as an NSFW channel.");
+            }
+            else
+            {
+                Satania.db.addNsfwChannel(Context.Channel.Id.ToString());
+                await Context.Channel.SendConfirmAsync("Channel has been added as an NSFW channel.");
+            }
+        }
     }
 }
