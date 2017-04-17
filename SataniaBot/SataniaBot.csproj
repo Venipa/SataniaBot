@@ -16,6 +16,8 @@
     <PackageReference Include="Discord.Net.Rest" Version="1.0.0-rc2-00691" />
     <PackageReference Include="Discord.Net.Rpc" Version="1.0.0-rc2-00691" />
     <PackageReference Include="Discord.Net.WebSocket" Version="1.0.0-rc2-00691" />
+    <PackageReference Include="Google.Apis" Version="1.25.0" />
+    <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.25.0.466" />
     <PackageReference Include="MySql.Data" Version="7.0.6-IR31" />
   </ItemGroup>
 

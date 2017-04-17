@@ -197,5 +197,61 @@ namespace SataniaBot.Services
 
             conn.Close();
         }
+
+        public void addNsfwChannel(string channelid)
+        {
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = myConnectionString;
+            conn.Open();
+
+            var command2 = new MySqlCommand($"INSERT INTO `nsfwchannels` (`channelid`) VALUES ({channelid})", conn);
+
+            MySqlDataReader reader2 = command2.ExecuteReader();
+
+            conn.Close();
+        }
+
+        public void removeNsfwChannel(string channelid)
+        {
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = myConnectionString;
+            conn.Open();
+
+            var command2 = new MySqlCommand($"DELETE FROM `nsfwchannels` WHERE `channelid` = {channelid}", conn);
+
+            MySqlDataReader reader2 = command2.ExecuteReader();
+
+            conn.Close();
+        }
+
+        public bool checkNsfw(string channelid)
+        {
+            try
+            {
+                MySqlConnection conn = new MySqlConnection();
+
+                conn.ConnectionString = myConnectionString;
+
+                conn.Open();
+
+                var command = new MySqlCommand($"SELECT channelid FROM nsfwchannels where channelid = {channelid};", conn);
+
+                MySqlDataReader reader = command.ExecuteReader();
+
+                while (reader.Read())
+                {
+                    conn.Close();
+
+                    return true;
+                }
+                conn.Close();
+                return false;
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return false;
+            }
+        }
     }
 }
