@@ -20,10 +20,16 @@ namespace SataniaBot.Modules.Help
             EmbedBuilder embed = new EmbedBuilder();
             embed.Color = new Color(114, 137, 218);
 
+            EmbedAuthorBuilder Author = new EmbedAuthorBuilder();
+            Author.Name = "List of commands for Satania:";
+            Author.IconUrl = Satania._client.CurrentUser.GetAvatarUrl();
+
+            embed.Author = Author;
+
             foreach (var m in Satania._commands._cmds.Modules)
             {
                 EmbedFieldBuilder embedfield = new EmbedFieldBuilder();
-                embedfield.IsInline = true;
+                embedfield.IsInline = false;
                 embedfield.Name = $"**{m.Name}**";
                 embedfield.Value = string.Join(", ", m.Commands.Select(x => x.Aliases.First()));
 
