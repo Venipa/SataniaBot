@@ -44,6 +44,14 @@ namespace SataniaBot
 
             db.updateWebStats(_client.Guilds.Count, _client.Guilds.SelectMany(x => x.Channels).Count(), _client.Guilds.SelectMany(x => x.Users).Count());
 
+            foreach(SocketGuild guild in _client.Guilds)
+            {
+                if(db.getPrefix(guild.Id.ToString()) == "")             //This is to make sure that a server is actually in the database on boot. 
+                {                                                       //If a server isn't in the database, the bot won't respond to commands.
+                    db.addServer(guild);
+                }
+            }
+
             await Task.Delay(-1);                            // Prevent the console window from closing.
         }
 
