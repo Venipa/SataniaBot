@@ -170,7 +170,19 @@ namespace SataniaBot.Modules
                     await ReplyAsync("The person didn't accept the divorce. You are still married.");
                 }
             }
+        }
 
+        [Command("avatar")]
+        public async Task Avatar(SocketGuildUser User = null)
+        {
+            if(User == null)
+            {
+                await Context.Channel.SendErrorAsync("You need to specify a user");
+            }
+            else
+            {
+                await Context.Channel.SendImageEmbedAsync(User.GetAvatarUrl(), "Avatar for user " + User.Username + ":");
+            }
         }
 
     }

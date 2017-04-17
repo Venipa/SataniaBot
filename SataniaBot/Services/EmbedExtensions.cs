@@ -83,5 +83,16 @@ namespace SataniaBot.Services.EmbedExtensions
 
             await Channel.SendMessageAsync("", embed: builder);
         }
+
+        public static async Task SendImageEmbedAsync(this IMessageChannel Channel, string URL, string Title)
+        {
+            EmbedBuilder builder = new EmbedBuilder();
+
+            builder.Title = Title;
+            builder.ImageUrl = URL;
+
+            await Channel.SendMessageAsync("", embed: builder);
+        }
+
     }
 }
