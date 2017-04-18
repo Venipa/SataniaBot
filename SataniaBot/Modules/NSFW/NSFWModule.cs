@@ -8,18 +8,19 @@ using SataniaBot.Services.EmbedExtensions;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Satania.Services;
+using static Satania.Services.SearchHelper;
 
 namespace SataniaBot.Modules
 {
     [Name("NSFW")]
     public class NSFWModule : InteractiveModuleBase<SocketCommandContext>
     {
-        [Command("danbooru")]
-        public async Task Danbooru([Remainder]string tags)
+        [Command("safebooru")]
+        public async Task Safebooru([Remainder]string tags)
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
-                await Context.Channel.SendImageEmbedAsync(SearchHelper.GetDanbooruImageLink(tags).Result);
+                await Context.Channel.SendImageEmbedAsync(PictureSearch(tags, WebsiteType.Safebooru).Result);
             }
             else
             {
@@ -32,33 +33,7 @@ namespace SataniaBot.Modules
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
-                await Context.Channel.SendImageEmbedAsync(SearchHelper.GetGelbooruImageLink(tags).Result);
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        [Command("safebooru")]
-        public async Task Safebooru([Remainder]string tags)
-        {
-            if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
-            {
-                await Context.Channel.SendImageEmbedAsync(SearchHelper.GetSafebooruImageLink(tags).Result);
-            }
-            else
-            {
-                return;
-            }
-        }
-
-        [Command("e621")]
-        public async Task E621([Remainder]string tags)
-        {
-            if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
-            {
-                await Context.Channel.SendImageEmbedAsync(SearchHelper.GetE621ImageLink(tags).Result);
+                await Context.Channel.SendImageEmbedAsync(PictureSearch(tags, WebsiteType.Gelbooru).Result);
             }
             else
             {
@@ -71,7 +46,46 @@ namespace SataniaBot.Modules
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
-                await Context.Channel.SendImageEmbedAsync(SearchHelper.GetRule34ImageLink(tags).Result);
+                await Context.Channel.SendImageEmbedAsync(PictureSearch(tags, WebsiteType.Rule34).Result);
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        [Command("konachan")]
+        public async Task Konachan([Remainder]string tags)
+        {
+            if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
+            {
+                await Context.Channel.SendImageEmbedAsync(PictureSearch(tags, WebsiteType.Konachan).Result);
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        [Command("yandere")]
+        public async Task Yandere([Remainder]string tags)
+        {
+            if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
+            {
+                await Context.Channel.SendImageEmbedAsync(PictureSearch(tags, WebsiteType.Yandere).Result);
+            }
+            else
+            {
+                return;
+            }
+        }
+
+        [Command("e621")]
+        public async Task E621([Remainder]string tags)
+        {
+            if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
+            {
+                await Context.Channel.SendImageEmbedAsync(GetE621ImageLink(tags).Result);
             }
             else
             {
