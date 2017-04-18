@@ -20,7 +20,11 @@ namespace SataniaBot.Modules
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
-                await Context.Channel.SendImageEmbedAsync(PictureSearch(tags, WebsiteType.Safebooru).Result);
+                string result = PictureSearch(tags, WebsiteType.Safebooru).Result;
+                if (string.IsNullOrWhiteSpace(result))
+                    await Context.Channel.SendErrorAsync("No results found.");
+                else
+                    await Context.Channel.SendImageEmbedAsync(result);
             }
             else
             {
@@ -33,7 +37,11 @@ namespace SataniaBot.Modules
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
-                await Context.Channel.SendImageEmbedAsync(PictureSearch(tags, WebsiteType.Gelbooru).Result);
+                string result = PictureSearch(tags, WebsiteType.Gelbooru).Result;
+                if (string.IsNullOrWhiteSpace(result))
+                    await Context.Channel.SendErrorAsync("No results found.");
+                else
+                    await Context.Channel.SendImageEmbedAsync(result);
             }
             else
             {
@@ -46,7 +54,11 @@ namespace SataniaBot.Modules
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
-                await Context.Channel.SendImageEmbedAsync(PictureSearch(tags, WebsiteType.Rule34).Result);
+                string result = PictureSearch(tags, WebsiteType.Rule34).Result;
+                if (string.IsNullOrWhiteSpace(result))
+                    await Context.Channel.SendErrorAsync("No results found.");
+                else
+                    await Context.Channel.SendImageEmbedAsync(result);
             }
             else
             {
@@ -59,7 +71,11 @@ namespace SataniaBot.Modules
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
-                await Context.Channel.SendImageEmbedAsync(PictureSearch(tags, WebsiteType.Konachan).Result);
+                string result = PictureSearch(tags, WebsiteType.Konachan).Result;
+                if (string.IsNullOrWhiteSpace(result))
+                    await Context.Channel.SendErrorAsync("No results found.");
+                else
+                    await Context.Channel.SendImageEmbedAsync(result);
             }
             else
             {
@@ -72,7 +88,11 @@ namespace SataniaBot.Modules
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
-                await Context.Channel.SendImageEmbedAsync(PictureSearch(tags, WebsiteType.Yandere).Result);
+                string result = PictureSearch(tags, WebsiteType.Yandere).Result;
+                if (string.IsNullOrWhiteSpace(result))
+                    await Context.Channel.SendErrorAsync("No results found.");
+                else
+                    await Context.Channel.SendImageEmbedAsync(result);
             }
             else
             {
@@ -85,7 +105,11 @@ namespace SataniaBot.Modules
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
-                await Context.Channel.SendImageEmbedAsync(GetE621ImageLink(tags).Result);
+                string result = GetE621ImageLink(tags).Result;
+                if (string.IsNullOrWhiteSpace(result))
+                    await Context.Channel.SendErrorAsync("No results found.");
+                else
+                    await Context.Channel.SendImageEmbedAsync(result);
             }
             else
             {
