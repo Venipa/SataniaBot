@@ -16,9 +16,9 @@ namespace SataniaBot.Modules
     public class NSFWModule : InteractiveModuleBase<SocketCommandContext>
     {
         [Command("safebooru")]
-        [Summary("Gets image from safebooru and sends image")]
+        [Summary("Gets image from safebooru and sends image. Gives random image if no tag.")]
         [Remarks("s?safebooru kizuna_ai")]
-        public async Task Safebooru([Remainder]string tags)
+        public async Task Safebooru([Remainder]string tags = null)
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
@@ -35,9 +35,9 @@ namespace SataniaBot.Modules
         }
 
         [Command("gelbooru")]
-        [Summary("Gets image from gelbooru and sends image")]
-        [Remarks("s?gelbooru kizuna_ai")]
-        public async Task Gelbooru([Remainder]string tags)
+        [Summary("Gets image from gelbooru and sends image. Add +rating:explicit to the end for NSFW only. Gives random NSFW image if no tag.")]
+        [Remarks("s?gelbooru kizuna_ai+rating:explicit")]
+        public async Task Gelbooru([Remainder]string tags = null)
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
@@ -54,9 +54,9 @@ namespace SataniaBot.Modules
         }
 
         [Command("rule34")]
-        [Summary("Gets image from rule34 and sends image")]
-        [Remarks("s?rule34 kizuna_ai")]
-        public async Task Rule34([Remainder]string tags)
+        [Summary("Gets image from rule34 and sends image. Add +rating:explicit to the end for NSFW only. Gives random NSFW image if no tag.")]
+        [Remarks("s?rule34 kizuna_ai+rating:explicit")]
+        public async Task Rule34([Remainder]string tags = null)
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
@@ -73,9 +73,9 @@ namespace SataniaBot.Modules
         }
 
         [Command("konachan")]
-        [Summary("Gets image from konachan and sends image")]
+        [Summary("Gets image from konachan and sends image. Add +rating:explicit to the end for NSFW only. Gives random NSFW image if no tag.")]
         [Remarks("s?konachan dark souls")]
-        public async Task Konachan([Remainder]string tags)
+        public async Task Konachan([Remainder]string tags = null)
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
@@ -92,9 +92,9 @@ namespace SataniaBot.Modules
         }
 
         [Command("yandere")]
-        [Summary("Gets image from yandere and sends image")]
-        [Remarks("s?yandere kizuna_ai")]
-        public async Task Yandere([Remainder]string tags)
+        [Summary("Gets image from yandere and sends image. Add +rating:explicit to the end for NSFW only. Gives random NSFW image if no tag.")]
+        [Remarks("s?yandere kizuna_ai+rating:explicit")]
+        public async Task Yandere([Remainder]string tags = null)
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
@@ -111,9 +111,9 @@ namespace SataniaBot.Modules
         }
 
         [Command("e621")]
-        [Summary("Gets image from e621 and sends image")]
-        [Remarks("s?e621 dragon")]
-        public async Task E621([Remainder]string tags)
+        [Summary("Gets image from e621 and sends image. Add +rating:explicit to the end for NSFW only. Gives random NSFW image if no tag.")]
+        [Remarks("s?e621 dragon+rating:explicit")]
+        public async Task E621([Remainder]string tags = null)
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
