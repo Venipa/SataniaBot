@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -24,6 +25,22 @@ namespace SataniaBot.Services
 
         private async Task HandleCommand(SocketMessage s)
         {
+                
+            DateTime? nowTime = DateTime.Now;
+            DateTime? oldTime = Satania.db.getTimer(s.Author.Id.ToString());
+
+            Random xpRandom = new Random();
+
+            if (oldTime == null)
+            {
+                Satania.db.updateTimer(s.Author.Id.ToString());
+            }
+            else if((nowTime - oldTime).Value.TotalSeconds > 60.0)
+            {
+                Satania.db.incrementExperience(s.Author.Id.ToString(), xpRandom.Next(10,15));
+                Satania.db.updateTimer(s.Author.Id.ToString());
+            }
+
             var serverPrefix = Satania.db.getPrefix((s.Channel as IGuildChannel)?.Guild.Id.ToString());
             var msg = s as SocketUserMessage;
             if (msg == null)                                          // Check if the received message is from a user.

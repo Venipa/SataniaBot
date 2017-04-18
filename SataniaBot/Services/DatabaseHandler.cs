@@ -253,5 +253,118 @@ namespace SataniaBot.Services
                 return false;
             }
         }
+
+        public DateTime? getTimer(string userid)
+        {
+
+            MySqlConnection conn = new MySqlConnection();
+
+            conn.ConnectionString = myConnectionString;
+
+            conn.Open();
+
+            var command = new MySqlCommand($"SELECT lastmessage FROM experiencetimers where userid = @userid;", conn);
+            command.Parameters.AddWithValue("@userid", userid);
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var result = reader["lastmessage"];
+
+                conn.Close();
+
+                return result as DateTime?;
+            }
+            conn.Close();
+            return null;
+        }
+
+        public void updateTimer(string userid)
+        {
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = myConnectionString;
+            DateTime Now = DateTime.Now;
+            if (getTimer(userid) == null)
+            {
+                conn.Open();
+                var command = new MySqlCommand($"INSERT INTO `experiencetimers` (`userid`, `lastmessage`) VALUES (@person, @time)", conn);
+                command.Parameters.AddWithValue("@person", userid);
+                command.Parameters.AddWithValue("@time", Now);
+                MySqlDataReader reader = command.ExecuteReader();
+                conn.Close();
+            }
+            else
+            {
+                conn.Open();
+                var command = new MySqlCommand($"UPDATE `experiencetimers` SET `lastmessage`=@time WHERE `userid`=@user;", conn);
+                command.Parameters.AddWithValue("@time", Now);
+                command.Parameters.AddWithValue("@user", userid);
+                MySqlDataReader reader = command.ExecuteReader();
+                conn.Close();
+            }
+        }
+
+
+
+        public void incrementExperience(string userid, int experiencegain)
+        {
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = myConnectionString;
+
+            conn.Open();
+
+            var command = new MySqlCommand($"SELECT * FROM userexperience where userid = {userid};", conn);
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                conn.Close();
+                conn.Open();
+
+                var command3 = new MySqlCommand($"UPDATE `userexperience` SET `experience`= `experience` + {experiencegain} WHERE `userid`={userid}", conn);
+
+                MySqlDataReader reader3 = command3.ExecuteReader();
+
+                conn.Close();
+                return;
+            }
+            conn.Close();
+
+            conn.Open();
+            var command2 = new MySqlCommand($"INSERT INTO `userexperience` (`userid`, `experience`) VALUES ({userid}, {experiencegain})", conn);
+
+            MySqlDataReader reader2 = command2.ExecuteReader();
+
+            conn.Close();
+            return;
+        }
+
+        public int? getExperience(string userid)
+        {
+
+            MySqlConnection conn = new MySqlConnection();
+
+            conn.ConnectionString = myConnectionString;
+
+            conn.Open();
+
+            var command = new MySqlCommand($"SELECT experience FROM userexperience where userid = @userid;", conn);
+            command.Parameters.AddWithValue("@userid", userid);
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var result = reader["experience"];
+
+                conn.Close();
+
+                return result as int?;
+            }
+            conn.Close();
+            return 0;
+        }
     }
 }
