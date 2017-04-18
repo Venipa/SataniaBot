@@ -29,7 +29,7 @@ namespace SataniaBot.Modules
                 if (string.IsNullOrWhiteSpace(result))
                     await Context.Channel.SendErrorAsync("No results found.");
                 else
-                    await Context.Channel.SendImageEmbedAsync(result);
+                    await Context.Channel.SendImageEmbedAsync(result, result);
             }
             else
             {
@@ -51,7 +51,7 @@ namespace SataniaBot.Modules
                 if (string.IsNullOrWhiteSpace(result))
                     await Context.Channel.SendErrorAsync("No results found.");
                 else
-                    await Context.Channel.SendImageEmbedAsync(result);
+                    await Context.Channel.SendImageEmbedAsync(result, result);
             }
             else
             {
@@ -73,7 +73,7 @@ namespace SataniaBot.Modules
                 if (string.IsNullOrWhiteSpace(result))
                     await Context.Channel.SendErrorAsync("No results found.");
                 else
-                    await Context.Channel.SendImageEmbedAsync(result);
+                    await Context.Channel.SendImageEmbedAsync(result, result);
             }
             else
             {
@@ -95,7 +95,7 @@ namespace SataniaBot.Modules
                 if (string.IsNullOrWhiteSpace(result))
                     await Context.Channel.SendErrorAsync("No results found.");
                 else
-                    await Context.Channel.SendImageEmbedAsync(result);
+                    await Context.Channel.SendImageEmbedAsync(result, result);
             }
             else
             {
@@ -117,7 +117,7 @@ namespace SataniaBot.Modules
                 if (string.IsNullOrWhiteSpace(result))
                     await Context.Channel.SendErrorAsync("No results found.");
                 else
-                    await Context.Channel.SendImageEmbedAsync(result);
+                    await Context.Channel.SendImageEmbedAsync(result, result);
             }
             else
             {
@@ -139,7 +139,7 @@ namespace SataniaBot.Modules
                 if (string.IsNullOrWhiteSpace(result))
                     await Context.Channel.SendErrorAsync("No results found.");
                 else
-                    await Context.Channel.SendImageEmbedAsync(result);
+                    await Context.Channel.SendImageEmbedAsync(result, result);
             }
             else
             {
