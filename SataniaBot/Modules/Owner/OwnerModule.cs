@@ -17,7 +17,7 @@ namespace SataniaBot.Modules
 
         [Command("die")]
         [Summary("Tactical kill switch")]
-        [Remarks("#die")]
+        [Remarks("s?die")]
         [RequireOwner()]
         public async Task Die()
         {
@@ -28,7 +28,7 @@ namespace SataniaBot.Modules
 
         [Command("setavatar")]
         [Summary("Sets avatar to image url")]
-        [Remarks("#setavatar URL")]
+        [Remarks("s?setavatar URL")]
         [RequireOwner()]
         public async Task SetAvatar(string AvatarURL = null)
         {
@@ -58,7 +58,7 @@ namespace SataniaBot.Modules
 
         [Command("setgame")]
         [Summary("Sets game playing status")]
-        [Remarks("#setgame with fire")]
+        [Remarks("s?setgame with fire")]
         [RequireOwner()]
         public async Task SetGame([Remainder]string Game = null)
         {
@@ -70,7 +70,7 @@ namespace SataniaBot.Modules
 
         [Command("setname")]
         [Summary("Sets name of bot to name given")]
-        [Remarks("#setname Donald Trump")]
+        [Remarks("s?setname Donald Trump")]
         [RequireOwner()]
         public async Task SetName([Remainder] string Name = null)
         {

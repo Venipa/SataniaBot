@@ -16,6 +16,8 @@ namespace SataniaBot.Modules
     public class NSFWModule : InteractiveModuleBase<SocketCommandContext>
     {
         [Command("safebooru")]
+        [Summary("Gets image from safebooru and sends image")]
+        [Remarks("s?safebooru kizuna_ai")]
         public async Task Safebooru([Remainder]string tags)
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
@@ -33,6 +35,8 @@ namespace SataniaBot.Modules
         }
 
         [Command("gelbooru")]
+        [Summary("Gets image from gelbooru and sends image")]
+        [Remarks("s?gelbooru kizuna_ai")]
         public async Task Gelbooru([Remainder]string tags)
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
@@ -50,6 +54,8 @@ namespace SataniaBot.Modules
         }
 
         [Command("rule34")]
+        [Summary("Gets image from rule34 and sends image")]
+        [Remarks("s?rule34 kizuna_ai")]
         public async Task Rule34([Remainder]string tags)
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
@@ -67,6 +73,8 @@ namespace SataniaBot.Modules
         }
 
         [Command("konachan")]
+        [Summary("Gets image from konachan and sends image")]
+        [Remarks("s?konachan dark souls")]
         public async Task Konachan([Remainder]string tags)
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
@@ -84,6 +92,8 @@ namespace SataniaBot.Modules
         }
 
         [Command("yandere")]
+        [Summary("Gets image from yandere and sends image")]
+        [Remarks("s?yandere kizuna_ai")]
         public async Task Yandere([Remainder]string tags)
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
@@ -101,6 +111,8 @@ namespace SataniaBot.Modules
         }
 
         [Command("e621")]
+        [Summary("Gets image from e621 and sends image")]
+        [Remarks("s?e621 dragon")]
         public async Task E621([Remainder]string tags)
         {
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))

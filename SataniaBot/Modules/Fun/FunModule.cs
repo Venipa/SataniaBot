@@ -15,7 +15,7 @@ namespace SataniaBot.Modules
     {
         [Command("say")]
         [Summary("Echos a message")]
-        [Remarks("#say hi")]
+        [Remarks("s?say hi")]
         public async Task Say([Remainder] string EchoMessage = null)
         {
             if (EchoMessage == null)
@@ -28,7 +28,7 @@ namespace SataniaBot.Modules
 
         [Command("ping")]
         [Summary("Pong!")]
-        [Remarks("#ping")]
+        [Remarks("s?ping")]
         public async Task Say()
         {
             await ReplyAsync("Pong!");
@@ -36,7 +36,7 @@ namespace SataniaBot.Modules
 
         [Command("rng")]
         [Summary("Generates random number between 1-100")]
-        [Remarks("#rng")]
+        [Remarks("s?rng")]
         public async Task Random(int MaxValue = 0, int MinValue = 0)
         {
             if (MaxValue < 0 || MinValue < 0)
@@ -63,7 +63,7 @@ namespace SataniaBot.Modules
 
         [Command("love")]
         [Summary("\"Generates\" love between two people")]
-        [Remarks("#love tromo jessica")]
+        [Remarks("s?love tromo life")]
         public async Task Love(string User1, [Remainder] string User2 = null)
         {
             string PersonOne = User1;       //note to self: define most things outside for(),foreach() and while() loops unless the variable wont be needed
@@ -101,7 +101,7 @@ namespace SataniaBot.Modules
 
         [Command("emote")]
         [Summary("Sends full size image of an emote")]
-        [Remarks("#emote meguButt")]
+        [Remarks("s?emote meguButt")]
         public async Task Emote(string emote)
         {
             Regex r = new Regex("\\:(\\d.*?[0-9])\\>", RegexOptions.IgnoreCase); //using regex to match the id between the : and > in the emote code

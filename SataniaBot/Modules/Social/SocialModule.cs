@@ -15,7 +15,7 @@ namespace SataniaBot.Modules
     {
         [Command("profile")]
         [Summary("Shows specified users profile or your own if unspecified")]
-        [Remarks("#profile tromodolo")]
+        [Remarks("s?profile tromodolo")]
         public async Task Profile(IGuildUser User = null)
         {
             if(User == null)
@@ -103,7 +103,7 @@ namespace SataniaBot.Modules
 
         [Command("marry", RunMode = RunMode.Async)]
         [Summary("Proposes to marry to specified person")]
-        [Remarks("#marry tromodolo")]
+        [Remarks("s?marry tromodolo")]
         public async Task Marry(IGuildUser Proposal = null)
         {
             if (Proposal == null)
@@ -142,7 +142,7 @@ namespace SataniaBot.Modules
 
         [Command("divorce", RunMode = RunMode.Async)]
         [Summary("Asks to divorce from specified person if married")]
-        [Remarks("#divorce tromodolo")]
+        [Remarks("s?divorce tromodolo")]
         public async Task Divorce(IGuildUser Proposal = null)
         {
             if (Proposal == null)
@@ -179,6 +179,8 @@ namespace SataniaBot.Modules
         }
 
         [Command("avatar")]
+        [Summary("Shows full size image from specified user")]
+        [Remarks("s?avatar tromodolo")]
         public async Task Avatar(SocketGuildUser User = null)
         {
             if(User == null)
