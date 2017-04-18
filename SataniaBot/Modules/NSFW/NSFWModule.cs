@@ -20,6 +20,9 @@ namespace SataniaBot.Modules
         [Remarks("s?safebooru kizuna_ai")]
         public async Task Safebooru([Remainder]string tags = null)
         {
+            if (tags == null)
+                tags = "rating:safe";
+
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
                 string result = PictureSearch(tags, WebsiteType.Safebooru).Result;
@@ -39,6 +42,9 @@ namespace SataniaBot.Modules
         [Remarks("s?gelbooru kizuna_ai+rating:explicit")]
         public async Task Gelbooru([Remainder]string tags = null)
         {
+            if (tags == null)
+                tags = "rating:explicit";
+
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
                 string result = PictureSearch(tags, WebsiteType.Gelbooru).Result;
@@ -58,6 +64,9 @@ namespace SataniaBot.Modules
         [Remarks("s?rule34 kizuna_ai+rating:explicit")]
         public async Task Rule34([Remainder]string tags = null)
         {
+            if (tags == null)
+                tags = "rating:explicit";
+
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
                 string result = PictureSearch(tags, WebsiteType.Rule34).Result;
@@ -73,10 +82,13 @@ namespace SataniaBot.Modules
         }
 
         [Command("konachan")]
-        [Summary("Gets image from konachan and sends image. Add +rating:explicit to the end for NSFW only. Gives random NSFW image if no tag.")]
+        [Summary("Gets image from konachan and sends image. Gives random image if no tag.")]
         [Remarks("s?konachan dark souls")]
         public async Task Konachan([Remainder]string tags = null)
         {
+            if (tags == null)
+                tags = "rating:safe";
+
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
                 string result = PictureSearch(tags, WebsiteType.Konachan).Result;
@@ -96,6 +108,9 @@ namespace SataniaBot.Modules
         [Remarks("s?yandere kizuna_ai+rating:explicit")]
         public async Task Yandere([Remainder]string tags = null)
         {
+            if (tags == null)
+                tags = "rating:explicit";
+
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
                 string result = PictureSearch(tags, WebsiteType.Yandere).Result;
@@ -115,6 +130,9 @@ namespace SataniaBot.Modules
         [Remarks("s?e621 dragon+rating:explicit")]
         public async Task E621([Remainder]string tags = null)
         {
+            if (tags == null)
+                tags = "rating:explicit";
+
             if (Satania.db.checkNsfw(Context.Channel.Id.ToString()))
             {
                 string result = GetE621ImageLink(tags).Result;
