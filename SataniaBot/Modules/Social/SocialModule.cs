@@ -59,19 +59,27 @@ namespace SataniaBot.Modules
                 MarriedField.Value = "No one";
             embed.AddField(MarriedField);
 
-            //userid
-            EmbedFieldBuilder UserIDField = new EmbedFieldBuilder();
-            UserIDField.IsInline = true;
-            UserIDField.Name = "User ID:";
-            UserIDField.Value = User.Id.ToString();
-            embed.AddField(UserIDField);
-            
+            //level
+            var userstats = Satania.db.getLevel(User.Id.ToString());
+            EmbedFieldBuilder LevelField = new EmbedFieldBuilder();
+            LevelField.IsInline = true;
+            LevelField.Name = "Level " + userstats.level;
+            LevelField.Value = $"`{userstats.currentExp}/{userstats.levelExp} XP`";
+            embed.AddField(LevelField);
+
             //experience
             EmbedFieldBuilder ExpField = new EmbedFieldBuilder();
             ExpField.IsInline = true;
             ExpField.Name = "Total Experience:";
             ExpField.Value = $"` {Satania.db.getExperience(User.Id.ToString())} XP `";
             embed.AddField(ExpField);
+
+            //userid
+            EmbedFieldBuilder UserIDField = new EmbedFieldBuilder();
+            UserIDField.IsInline = true;
+            UserIDField.Name = "User ID:";
+            UserIDField.Value = User.Id.ToString();
+            embed.AddField(UserIDField);
 
             //account creation date
             EmbedFieldBuilder DateField = new EmbedFieldBuilder();
@@ -86,16 +94,6 @@ namespace SataniaBot.Modules
             JoinedField.Name = "Joined Server:";
             JoinedField.Value = User.JoinedAt.Value.ToString("d");
             embed.AddField(JoinedField);
-
-            /*      Out-commented for now because levels arent made yet
-            //level
-            EmbedFieldBuilder LevelField = new EmbedFieldBuilder();
-            LevelField.IsInline = true;
-            LevelField.Name = "Level";
-            LevelField.Value = "` 5023 `";
-            embed.AddField(LevelField);
-            */
-
 
             await ReplyAsync("", embed: embed);
         }

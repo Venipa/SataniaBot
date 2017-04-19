@@ -19,6 +19,7 @@
     <PackageReference Include="Google.Apis" Version="1.25.0" />
     <PackageReference Include="Google.Apis.Customsearch.v1" Version="1.25.0.466" />
     <PackageReference Include="MySql.Data" Version="7.0.6-IR31" />
+    <PackageReference Include="System.ValueTuple" Version="4.3.0" />
     <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
   </ItemGroup>
 
