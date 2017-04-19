@@ -366,5 +366,48 @@ namespace SataniaBot.Services
             conn.Close();
             return 0;
         }
+
+        public (int? level, int? currentExp, int? levelExp) getLevel(string userid)
+        {
+            MySqlConnection conn = new MySqlConnection();
+
+            conn.ConnectionString = myConnectionString;
+
+            conn.Open();
+
+            var command = new MySqlCommand($"SELECT experience FROM userexperience where userid = @userid;", conn);
+            command.Parameters.AddWithValue("@userid", userid);
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                var totalExp = reader["experience"];
+
+                int? currentExp = 0, levelExp = 0, level = 1;
+                int? totalExperience = (totalExp as int?);
+
+                int loop = 1;
+                for(int i = 0; i < loop; i++)
+                {
+                    if (totalExperience - (10 * (Math.Pow(loop, 2)) + 500) > 0)
+                    {
+                        totalExperience = Convert.ToInt32(totalExperience - (10 * (Math.Pow(loop, 2)) + 500));
+                        level++;
+                    }
+                    else if (totalExperience - (10 * (Math.Pow(loop, 2)) + 500) < 0)
+                    {
+                        currentExp = totalExperience;
+                        levelExp = Convert.ToInt32((10 * (Math.Pow(loop, 2)) + 500));
+                        conn.Close();
+                        return (level, currentExp, levelExp);
+                    }
+                    loop++;
+                }
+            }
+            conn.Close();
+            return (1, 0, 0);
+
+        }
     }
 }
