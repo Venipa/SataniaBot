@@ -49,7 +49,7 @@ namespace SataniaBot.Modules
         [Command("Rpg", RunMode = RunMode.Async)]
         public async Task rpg()
         {
-            var Dragon = new monster() { Name = "Dragon", health = 33, attack = 30, resistance = 15};
+            var Dragon = new monster() { Name = "Dragon", health = 250, attack = 30, resistance = 15};
             var Player = new Player() { hpCap = 350, health = 350, attack = 35, resistance = 35 };
             while (Dragon.health > 0 && Player.health > 0)
             {
