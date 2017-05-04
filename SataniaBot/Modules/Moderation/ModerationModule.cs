@@ -52,9 +52,13 @@ namespace SataniaBot.Modules
             {
                 await Context.Channel.SendErrorAsync("You can't ban yourself.");
             }
-            else if (BanUser.Hierarchy > (Context.Message.Author as SocketGuildUser).Hierarchy)
+            else if (BanUser.Hierarchy == Int32.MaxValue)
             {
-                await Context.Channel.SendErrorAsync("You can't ban someone with a role higher than you.");
+                await Context.Channel.SendErrorAsync("You can't ban the owner of a server.");
+            }
+            else if (BanUser.Hierarchy >= (Context.Message.Author as SocketGuildUser).Hierarchy)
+            {
+                await Context.Channel.SendErrorAsync("You can't ban someone with a role higher or equal to yours.");
             }
             else
             {
@@ -86,9 +90,13 @@ namespace SataniaBot.Modules
             {
                 await Context.Channel.SendErrorAsync("You can't kick yourself.");
             }
-            else if (KickUser.Hierarchy > (Context.Message.Author as SocketGuildUser).Hierarchy)
+            else if (KickUser.Hierarchy == Int32.MaxValue)
             {
-                await Context.Channel.SendErrorAsync("You can't kick someone with a role higher than you.");
+                await Context.Channel.SendErrorAsync("You can't kick the owner of a server.");
+            }
+            else if (KickUser.Hierarchy >= (Context.Message.Author as SocketGuildUser).Hierarchy)
+            {
+                await Context.Channel.SendErrorAsync("You can't kick someone with a role higher or equal to yours.");
             }
             else {
                 try
