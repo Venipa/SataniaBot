@@ -1,6 +1,8 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.IO;
+using System.Drawing;
+using Console = Colorful.Console;
 
 namespace SataniaBot.Services
 {
@@ -40,13 +42,13 @@ namespace SataniaBot.Services
 
                 var config = new Configuration();                   // Create a new configuration object.
 
-                Console.WriteLine("Please enter your token: ");
+                Console.WriteLine("Please enter your token: ", System.Drawing.Color.LawnGreen);
                 string token = Console.ReadLine();                  // Read the bot token from console.
 
                 config.Token = token;
                 config.SaveJson();                                  // Save the new configuration object to file.
             }
-            Console.WriteLine("Configuration Loaded");
+            Console.WriteLine("Configuration Loaded", System.Drawing.Color.LawnGreen);
         }
 
         /// <summary> Save the configuration to the path specified in FileName. </summary>
