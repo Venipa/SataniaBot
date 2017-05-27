@@ -18,6 +18,10 @@ namespace SataniaBot.Modules
         [Remarks("s?say hi")]
         public async Task Say([Remainder] string EchoMessage)
         {
+            if(Context.Message.MentionedRoles.Count > 0)
+            {
+                return;
+            }
             await ReplyAsync("📣 `" + EchoMessage + "`");
         }
 
@@ -26,7 +30,7 @@ namespace SataniaBot.Modules
         [Remarks("s?ping")]
         public async Task Say()
         {
-            await ReplyAsync("Pong!");
+            await ReplyAsync("Pong!"); 
         }
 
         [Command("rng")]
