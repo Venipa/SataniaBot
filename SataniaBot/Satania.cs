@@ -28,7 +28,7 @@ namespace SataniaBot
             {
                 LogLevel = LogSeverity.Info,              // Specify console verbose information level.
                 AlwaysDownloadUsers = true,                  // Start the cache off with updated information.
-                MessageCacheSize = 1000                      // Tell discord.net how long to store messages (per channel).
+                MessageCacheSize = 1000                    // Tell discord.net how long to store messages (per channel).
             });
             
             _client.Log += (l)                               // Register the console log event.
@@ -49,7 +49,7 @@ namespace SataniaBot
 
             db.updateWebStats(guildcount, channelcount, usercount);
 
-            Console.WriteLine("Connected to Discord Chat Service.\nServers: " + guildcount + " Channels: " + channelcount + " Users: " + usercount, System.Drawing.Color.Green);
+            Console.WriteLine("Connected to Discord Chat Service.\nServers: " + guildcount + " Channels: " + channelcount + " Users: " + usercount, System.Drawing.Color.LawnGreen);
 
 
             foreach(SocketGuild guild in _client.Guilds)
