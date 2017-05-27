@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using SataniaBot.Services;
 using System.Linq;
 using System.Threading;
+using System.Drawing;
+using Console = Colorful.Console;
 
 
 namespace SataniaBot
@@ -24,14 +26,14 @@ namespace SataniaBot
                                                              // Create a new instance of DiscordSocketClient.
             _client = new DiscordSocketClient(new DiscordSocketConfig()
             {
-                LogLevel = LogSeverity.Critical,              // Specify console verbose information level.
+                LogLevel = LogSeverity.Info,              // Specify console verbose information level.
                 AlwaysDownloadUsers = true,                  // Start the cache off with updated information.
                 MessageCacheSize = 1000                      // Tell discord.net how long to store messages (per channel).
             });
             
             _client.Log += (l)                               // Register the console log event.
                 => Task.Run(()
-                => Console.WriteLine($"[{l.Severity}] {l.Source}: {l.Exception?.ToString() ?? l.Message}"));
+                => Console.WriteLine($"[{l.Severity}] {l.Source}: {l.Exception?.Message ?? l.Message}", System.Drawing.Color.OrangeRed));
             
             await _client.LoginAsync(TokenType.Bot, Configuration.Load().Token);
             await _client.StartAsync();
@@ -47,7 +49,7 @@ namespace SataniaBot
 
             db.updateWebStats(guildcount, channelcount, usercount);
 
-            Console.WriteLine("\nConnected to Discord Chat Service.\nServers: " + guildcount + " Channels: " + channelcount + " Users: " + usercount);
+            Console.WriteLine("Connected to Discord Chat Service.\nServers: " + guildcount + " Channels: " + channelcount + " Users: " + usercount, System.Drawing.Color.Green);
 
 
             foreach(SocketGuild guild in _client.Guilds)

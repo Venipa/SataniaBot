@@ -4,6 +4,8 @@ using Discord.WebSocket;
 using System;
 using System.Reflection;
 using System.Threading.Tasks;
+using System.Drawing;
+using Console = Colorful.Console;
 
 namespace SataniaBot.Services
 {
@@ -59,9 +61,9 @@ namespace SataniaBot.Services
                 if (result.IsSuccess)
                 {
                     Satania.db.incrementCommands();
-                    Console.WriteLine("Command " + s.Content + " used by user " + s.Author + ":");
-                    Console.WriteLine("In Server: " + (s.Channel as IGuildChannel).Guild.Name);
-                    Console.WriteLine("In Channel: " + s.Channel.Name);
+                    Console.WriteLine("\nCommand " + s.Content + " used by user " + s.Author + ":", System.Drawing.Color.Cyan);
+                    Console.WriteLine("In Server: " + (s.Channel as IGuildChannel).Guild.Name + $" ({(s.Channel as IGuildChannel).Guild.Id})", System.Drawing.Color.Cyan);
+                    Console.WriteLine("In Channel: " + s.Channel.Name + $" ({s.Channel.Id})", System.Drawing.Color.Cyan);
                 }
                 //if (!result.IsSuccess)                                // If execution failed, reply with the error message.
                 //   Console.WriteLine(result.ToString());
