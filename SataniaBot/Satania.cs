@@ -24,15 +24,15 @@ namespace SataniaBot
                                                              // Create a new instance of DiscordSocketClient.
             _client = new DiscordSocketClient(new DiscordSocketConfig()
             {
-                LogLevel = LogSeverity.Verbose,              // Specify console verbose information level.
+                LogLevel = LogSeverity.Critical,              // Specify console verbose information level.
                 AlwaysDownloadUsers = true,                  // Start the cache off with updated information.
                 MessageCacheSize = 1000                      // Tell discord.net how long to store messages (per channel).
             });
-
+            
             _client.Log += (l)                               // Register the console log event.
                 => Task.Run(()
                 => Console.WriteLine($"[{l.Severity}] {l.Source}: {l.Exception?.ToString() ?? l.Message}"));
-
+            
             await _client.LoginAsync(TokenType.Bot, Configuration.Load().Token);
             await _client.StartAsync();
 
@@ -41,8 +41,14 @@ namespace SataniaBot
             _client.JoinedGuild += _client_JoinedGuild;
 
             await Task.Delay(5000);
+            var guildcount = _client.Guilds.Count;
+            var channelcount = _client.Guilds.SelectMany(x => x.Channels).Count();
+            var usercount = _client.Guilds.SelectMany(x => x.Users).Count();
 
-            db.updateWebStats(_client.Guilds.Count, _client.Guilds.SelectMany(x => x.Channels).Count(), _client.Guilds.SelectMany(x => x.Users).Count());
+            db.updateWebStats(guildcount, channelcount, usercount);
+
+            Console.WriteLine("\nConnected to Discord Chat Service.\nServers: " + guildcount + " Channels: " + channelcount + " Users: " + usercount);
+
 
             foreach(SocketGuild guild in _client.Guilds)
             {

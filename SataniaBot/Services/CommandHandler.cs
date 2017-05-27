@@ -25,7 +25,7 @@ namespace SataniaBot.Services
 
         private async Task HandleCommand(SocketMessage s)
         {
-                
+
             DateTime? nowTime = DateTime.Now;
             DateTime? oldTime = Satania.db.getTimer(s.Author.Id.ToString());
 
@@ -59,6 +59,9 @@ namespace SataniaBot.Services
                 if (result.IsSuccess)
                 {
                     Satania.db.incrementCommands();
+                    Console.WriteLine("Command " + s.Content + " used by user " + s.Author + ":");
+                    Console.WriteLine("In Server: " + (s.Channel as IGuildChannel).Guild.Name);
+                    Console.WriteLine("In Channel: " + s.Channel.Name);
                 }
                 //if (!result.IsSuccess)                                // If execution failed, reply with the error message.
                 //   Console.WriteLine(result.ToString());
