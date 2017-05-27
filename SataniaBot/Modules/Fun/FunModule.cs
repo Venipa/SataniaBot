@@ -16,14 +16,9 @@ namespace SataniaBot.Modules
         [Command("say")]
         [Summary("Echos a message")]
         [Remarks("s?say hi")]
-        public async Task Say([Remainder] string EchoMessage = null)
+        public async Task Say([Remainder] string EchoMessage)
         {
-            if (EchoMessage == null)
-            {
-                EchoMessage = "TRICKED";
-            }
-
-            await ReplyAsync(EchoMessage);
+            await ReplyAsync("📣 `" + EchoMessage + "`");
         }
 
         [Command("ping")]
