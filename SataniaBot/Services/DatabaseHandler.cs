@@ -2,6 +2,8 @@
 using MySql.Data.MySqlClient;
 using Discord.WebSocket;
 using System.Linq;
+using Discord;
+using System.Collections.Generic;
 
 namespace SataniaBot.Services
 {
@@ -407,7 +409,82 @@ namespace SataniaBot.Services
             }
             conn.Close();
             return (1, 0, 0);
+        }
 
+        public void addRole(IRole role, string serverid)
+        {
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = myConnectionString;
+
+            conn.Open();
+
+            var command = new MySqlCommand($"INSERT INTO `serverroles` (`serverid`, `roleid`, `rolename`) VALUES ('{serverid}', '{role.Id}', @rolename)", conn);
+            command.Parameters.AddWithValue("@rolename", role.Name);
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            conn.Close();
+
+            return;
+        }
+        public void removeRole(IRole role, string serverid)
+        {
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = myConnectionString;
+
+            conn.Open();
+
+            var command = new MySqlCommand($"DELETE FROM `tromobot`.`serverroles` WHERE `serverid`='{serverid}' AND `rolename`= @rolename;", conn);
+            command.Parameters.AddWithValue("@rolename", role.Name);
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            conn.Close();
+
+            return;
+        }
+        public string getServerRole(string serverid)
+        {
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = myConnectionString;
+
+            conn.Open();
+
+            var command = new MySqlCommand($"SELECT rolename FROM `tromobot`.`serverroles` WHERE `serverid`='{serverid}';", conn);
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            List<string> roles = new List<string>();
+
+            while (reader.Read())
+            {
+                roles.Add(reader["rolename"].ToString());
+            }
+
+            var fullist = string.Join(", ", roles);
+
+            conn.Close();
+            return fullist;
+        }
+
+        public bool checkServerRole(string serverid, string roleid)
+        {
+            MySqlConnection conn = new MySqlConnection();
+            conn.ConnectionString = myConnectionString;
+
+            conn.Open();
+
+            var command = new MySqlCommand($"SELECT * FROM `serverroles` WHERE `serverid`='{serverid}' AND `roleid`= '{roleid}';", conn);
+
+            MySqlDataReader reader = command.ExecuteReader();
+
+            while (reader.Read())
+            {
+                conn.Close();
+                return true;
+            }
+            conn.Close();
+            return false;
         }
     }
 }
