@@ -22,8 +22,14 @@ namespace SataniaBot.Modules
         public async Task roles()
         {
             var results = Satania.db.getServerRole(Context.Guild.Id.ToString());
-            await ReplyAsync(results);
-
+            if(results.Length > 1)
+            {
+                await Context.Channel.SendColouredEmbedAsync("The list of roles available in this server:", results, new Color());
+            }
+            else
+            {
+                await Context.Channel.SendColouredEmbedAsync("The list of roles available in this server:", "There are no available roles", new Color());
+            }
         }
 
         [Command("setrole")]
