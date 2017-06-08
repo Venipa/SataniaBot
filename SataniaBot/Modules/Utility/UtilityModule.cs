@@ -33,38 +33,50 @@ namespace SataniaBot.Modules
         }
 
         [Command("setrole")]
-        [Summary("Adds a role to self-assignable roles")]
+        [Summary("Adds a role to self-assignable roles. Needs manage messages permissions.")]
         [Remarks("s?setrole civilian")]
-        [RequireUserPermission(GuildPermission.ManageGuild)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task setrole(IRole role)
         {
-            try         //Basically tries adding role to user to check if it has permissions to do it. Because I'm bad at finding out how otherwise
+            try 
             {
-                await (Context.Message.Author as IGuildUser).AddRoleAsync(role);
-                await (Context.Message.Author as IGuildUser).RemoveRoleAsync(role);
-                Satania.db.addRole(role, Context.Guild.Id.ToString());
-                await Context.Channel.SendConfirmAsync("Role was set as a self-assignable role.");
+                int authorPos = (Context.Message.Author as SocketGuildUser).Hierarchy;
+                int rolePos = role.Position;
+                int botPos = Context.Guild.CurrentUser.Hierarchy;
+
+                if (botPos <= rolePos)
+                {
+                    await Context.Channel.SendErrorAsync("The role needs to be below the bot in role-list.");
+                }
+                else if (authorPos <= rolePos)
+                {
+                    await Context.Channel.SendErrorAsync("You can't add a role that is equal to your own or higher to the self-assign.");
+                }
+                else
+                {
+                    Satania.db.addRole(role, Context.Guild.Id.ToString());
+                    await Context.Channel.SendConfirmAsync("Role was set as a self-assignable role.");
+                }
+                    
             }
-            catch (Exception e)
+            catch
             {
-                await Context.Channel.SendErrorAsync("Role needs to be below Erin in role list or it's already added. :(");
+                await Context.Channel.SendErrorAsync("The role is already added to self-assignable. :( ");
             }
         }
 
         [Command("unsetrole")]
-        [Summary("Removes a role from self-assignable")]
+        [Summary("Removes a role from self-assignable. Needs manage messages permissions.")]
         [Remarks("s?unsetrole civilian")]
-        [RequireUserPermission(GuildPermission.ManageGuild)]
+        [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task unsetRole(IRole role)
         {
-            try         //Basically tries adding role to user to check if it has permissions to do it. Because I'm bad at finding out how otherwise
+            try     
             {
-                await (Context.Message.Author as IGuildUser).AddRoleAsync(role);
-                await (Context.Message.Author as IGuildUser).RemoveRoleAsync(role);
                 Satania.db.removeRole(role, Context.Guild.Id.ToString());
                 await Context.Channel.SendConfirmAsync("Role was removed as a self-assignable role.");
             }
-            catch (Exception e)
+            catch
             {
                 await Context.Channel.SendErrorAsync("Role needs to be below Erin in role list or the role wasn't added. :(");
             }
