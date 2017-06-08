@@ -183,11 +183,25 @@ namespace SataniaBot.Modules
         {
             if(User == null)
             {
-                await Context.Channel.SendImageEmbedAsync(Context.Message.Author.GetAvatarUrl(ImageFormat.Auto, 1024), "Avatar for user " + Context.Message.Author.Username + ":");
+                var useravatar = Context.Message.Author.GetAvatarUrl(ImageFormat.Auto, 1024);
+                if (useravatar.Contains(".gif"))
+                {
+                    var url = useravatar.Substring(0, useravatar.Length - 10);
+                    await Context.Channel.SendImageEmbedAsync(url, "Avatar for user " + Context.Message.Author.Username + ":");
+                }
+                else
+                    await Context.Channel.SendImageEmbedAsync(Context.Message.Author.GetAvatarUrl(ImageFormat.Auto, 1024), "Avatar for user " + Context.Message.Author.Username + ":");
             }
             else
             {
-                await Context.Channel.SendImageEmbedAsync(User.GetAvatarUrl(ImageFormat.Auto, 1024), "Avatar for user " + User.Username + ":");
+                var useravatar = User.GetAvatarUrl(ImageFormat.Auto, 1024);
+                if (useravatar.Contains(".gif"))
+                {
+                    var url = useravatar.Substring(0, useravatar.Length - 10);
+                    await Context.Channel.SendImageEmbedAsync(url, "Avatar for user " + User.Username + ":");
+                }
+                else
+                    await Context.Channel.SendImageEmbedAsync(User.GetAvatarUrl(ImageFormat.Auto, 1024), "Avatar for user " + User.Username + ":");
             }
         }
 
