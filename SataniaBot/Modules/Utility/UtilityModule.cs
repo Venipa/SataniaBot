@@ -71,14 +71,14 @@ namespace SataniaBot.Modules
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task unsetRole(IRole role)
         {
-            try     
+            if (Satania.db.checkServerRole(Context.Guild.Id.ToString(), role.Id.ToString()))
             {
                 Satania.db.removeRole(role, Context.Guild.Id.ToString());
                 await Context.Channel.SendConfirmAsync("Role was removed as a self-assignable role.");
             }
-            catch
+            else
             {
-                await Context.Channel.SendErrorAsync("Role needs to be below Erin in role list or the role wasn't added. :(");
+                await Context.Channel.SendErrorAsync("Role is not added as a self-assignable role.");
             }
         }
 
