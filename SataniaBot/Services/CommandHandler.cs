@@ -5,6 +5,7 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 using System.Drawing;
+using Cleverbot.Net;
 using Console = Colorful.Console;
 
 namespace SataniaBot.Services
@@ -14,6 +15,8 @@ namespace SataniaBot.Services
     {
         private DiscordSocketClient _client;
         public CommandService _cmds;
+        CleverbotSession cleverbot = new CleverbotSession(Configuration.Load().CleverbotApi);
+
 
         public async Task Install(DiscordSocketClient c)
         {
@@ -54,7 +57,6 @@ namespace SataniaBot.Services
 
             int argPos = 0;                                           // Check if the message has either a string or mention prefix.
             if (msg.HasStringPrefix(serverPrefix, ref argPos) ||
-                msg.HasMentionPrefix(_client.CurrentUser, ref argPos) ||
                 msg.HasStringPrefix("s?", ref argPos))
             {                                                         // Try and execute a command with the given context.
                 var result = await _cmds.ExecuteAsync(context, argPos);
@@ -68,6 +70,13 @@ namespace SataniaBot.Services
                 //if (!result.IsSuccess)                                // If execution failed, reply with the error message.
                 //   Console.WriteLine(result.ToString());
                 //      Commented out because otherwise bot either spams console or chat with error message when it doesnt find a command, unneeded
+            }
+            else if(msg.HasMentionPrefix(_client.CurrentUser, ref argPos))
+            {
+                var test = msg.Content.Replace($"<@{_client.CurrentUser.Id}>", "");
+                await context.Channel.TriggerTypingAsync();
+                var response = await cleverbot.GetResponseAsync(test);
+                await msg.Channel.SendMessageAsync(response.Response);
             }
         }
     }

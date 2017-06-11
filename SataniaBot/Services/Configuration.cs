@@ -21,6 +21,8 @@ namespace SataniaBot.Services
         public string Prefix { get; set; } = "!";
         /// <summary> Your bot's login token. </summary>
         public string Token { get; set; } = "";
+        /// <summary> Api key for using cleverbot. </summary>
+        public string CleverbotApi { get; set; } = "";
 
         /// <summary> Host adress database is hosted on </summary>
         public string DatabaseHost { get; set; } = "";
