@@ -38,11 +38,11 @@ namespace SataniaBot.Modules
         }
 
         [Command("ban")]
-        [Summary("Bans a user from the server and deletes last week of messages")]
+        [Summary("Bans a user from the server and deletes last day of messages")]
         [Remarks("s?ban reddeyez")]
         [RequireBotPermission(GuildPermission.BanMembers)]
         [RequireUserPermission(GuildPermission.BanMembers)]
-        public async Task Ban(SocketGuildUser BanUser = null)
+        public async Task Ban(SocketGuildUser BanUser = null, [Remainder]string reason = null)
         {
             if (BanUser == null)
             {
@@ -64,13 +64,23 @@ namespace SataniaBot.Modules
             {
                 try
                 {
+                    if (string.IsNullOrWhiteSpace(reason))
+                        reason = "None";
+
+                    var time = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.Utc);
+
+                    var BanDM = await BanUser.CreateDMChannelAsync();
+
+                    await BanDM.SendErrorAsync($"You were banned from: {Context.Guild.Name}", $"**Date:** {time} UTC \n" +
+                                                                                              $"**Reason:** {reason}");
+
                     await Context.Guild.AddBanAsync(BanUser, 1);
 
                     await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n {BanUser} was banned from this server.");
                 }
                 catch
                 {
-                    await Context.Channel.SendErrorAsync($"{Context.Message.Author.Mention}\n {BanUser} was banned from this server.");
+                    await Context.Channel.SendErrorAsync($"{Context.Message.Author.Mention}\n {BanUser} couldn't banned from this server.");
                 }
             }
         }
@@ -80,7 +90,7 @@ namespace SataniaBot.Modules
         [Remarks("s?kick kbuns")]
         [RequireBotPermission(GuildPermission.KickMembers)]
         [RequireUserPermission(GuildPermission.KickMembers)]
-        public async Task Kick(SocketGuildUser KickUser = null)
+        public async Task Kick(SocketGuildUser KickUser = null, [Remainder]string reason = null)
         {
             if (KickUser == null)
             {
@@ -101,13 +111,23 @@ namespace SataniaBot.Modules
             else {
                 try
                 {
+                    if (string.IsNullOrWhiteSpace(reason))
+                        reason = "None";
+
+                    var time = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.Utc);
+
+                    var KickDM = await KickUser.CreateDMChannelAsync();
+
+                    await KickDM.SendErrorAsync($"You were banned from: {Context.Guild.Name}", $"**Date:** {time} UTC \n" +
+                                                                                               $"**Reason:** {reason}");
+
                     await KickUser.KickAsync();
 
                     await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n {KickUser} was kicked from this server.");
                 }
                 catch
                 {
-                    await Context.Channel.SendErrorAsync($"{Context.Message.Author.Mention}\n {KickUser} was kicked from this server.");
+                    await Context.Channel.SendErrorAsync($"{Context.Message.Author.Mention}\n {KickUser} couldn't be kicked from this server.");
                 }
             }
         }
