@@ -28,13 +28,14 @@ namespace SataniaBot.Modules.Help
 
             foreach (var m in Satania._commands._cmds.Modules)
             {
-                EmbedFieldBuilder embedfield = new EmbedFieldBuilder();
-                embedfield.IsInline = false;
-                embedfield.Name = $"**{m.Name}**";
-                embedfield.Value = string.Join(", ", m.Commands.Select(x => x.Aliases.First()));
+                if(!(m.Name.ToLower() == "owner")) { 
+                    EmbedFieldBuilder embedfield = new EmbedFieldBuilder();
+                    embedfield.IsInline = false;
+                    embedfield.Name = $"**{m.Name}**";
+                    embedfield.Value = string.Join(", ", m.Commands.Select(x => x.Aliases.First()));
 
-                embed.AddField(embedfield);
-
+                    embed.AddField(embedfield);
+                }
             }
 
             await ReplyAsync("", embed:embed);
