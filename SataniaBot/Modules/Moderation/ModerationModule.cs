@@ -132,7 +132,7 @@ namespace SataniaBot.Modules
                     {
                         var KickDM = await KickUser.CreateDMChannelAsync();
 
-                        await KickDM.SendErrorAsync($"You were banned from: {Context.Guild.Name}", $"**Date:** {time} UTC \n" +
+                        await KickDM.SendErrorAsync($"You were kicked from: {Context.Guild.Name}", $"**Date:** {time} UTC \n" +
                                                                                                    $"**Reason:** {reason}");
 
                         await KickUser.KickAsync();
@@ -141,7 +141,7 @@ namespace SataniaBot.Modules
                     }
                     else
                     {
-                        await Context.Channel.SendErrorAsync($"User {KickUser} was not banned.");
+                        await Context.Channel.SendErrorAsync($"User {KickUser} was not kicked.");
                     }
                 }
                 catch
