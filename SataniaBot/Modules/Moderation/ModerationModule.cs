@@ -9,11 +9,12 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using SataniaBot.Services.EmbedExtensions;
+using Discord.Addons.InteractiveCommands;
 
 namespace SataniaBot.Modules
 {
     [Name("Moderation")]
-    public class ModerationModule : ModuleBase<SocketCommandContext>
+    public class ModerationModule : InteractiveModuleBase<SocketCommandContext>
     {
         
         [Command("setprefix")]
@@ -37,7 +38,7 @@ namespace SataniaBot.Modules
             }
         }
 
-        [Command("ban")]
+        [Command("ban", RunMode = RunMode.Async)]
         [Summary("Bans a user from the server and deletes last day of messages")]
         [Remarks("s?ban reddeyez")]
         [RequireBotPermission(GuildPermission.BanMembers)]
@@ -69,23 +70,32 @@ namespace SataniaBot.Modules
 
                     var time = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.Utc);
 
-                    var BanDM = await BanUser.CreateDMChannelAsync();
+                    await Context.Channel.SendColouredEmbedAsync($"Are you sure you want to ban user: {BanUser}?", $"**Send `confirm` or `cancel`**\n**Date:** {time} UTC \n**Reason:** {reason}", new Color());
+                    var response = await WaitForMessage(Context.Message.Author, Context.Channel, new TimeSpan(0, 0, 60));
+                    if (response.Content.ToString().ToLower() == "confirm")
+                    {
 
-                    await BanDM.SendErrorAsync($"You were banned from: {Context.Guild.Name}", $"**Date:** {time} UTC \n" +
-                                                                                              $"**Reason:** {reason}");
+                        var BanDM = await BanUser.CreateDMChannelAsync();
 
-                    await Context.Guild.AddBanAsync(BanUser, 1);
+                        await BanDM.SendErrorAsync($"You were banned from: {Context.Guild.Name}", $"**Date:** {time} UTC \n" +
+                                                                                                  $"**Reason:** {reason}");
+                        await Context.Guild.AddBanAsync(BanUser, 1);
 
-                    await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n {BanUser} was banned from this server.");
+                        await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n {BanUser} was banned from this server.");
+                    }
+                    else
+                    {
+                        await Context.Channel.SendErrorAsync($"User {BanUser} was not banned.");
+                    }    
                 }
                 catch
                 {
-                    await Context.Channel.SendErrorAsync($"{Context.Message.Author.Mention}\n {BanUser} couldn't banned from this server.");
+                    await Context.Channel.SendErrorAsync($"{Context.Message.Author.Mention}\n {BanUser} could not be banned from this server.");
                 }
             }
         }
 
-        [Command("kick")]
+        [Command("kick", RunMode = RunMode.Async)]
         [Summary("Kicks a user from the server")]
         [Remarks("s?kick kbuns")]
         [RequireBotPermission(GuildPermission.KickMembers)]
@@ -116,14 +126,23 @@ namespace SataniaBot.Modules
 
                     var time = TimeZoneInfo.ConvertTime(DateTime.Now, TimeZoneInfo.Utc);
 
-                    var KickDM = await KickUser.CreateDMChannelAsync();
+                    await Context.Channel.SendColouredEmbedAsync($"Are you sure you want to kick user: {KickUser}?", $"**Send `confirm` or `cancel`**\n**Date:** {time} UTC \n**Reason:** {reason}", new Color());
+                    var response = await WaitForMessage(Context.Message.Author, Context.Channel, new TimeSpan(0, 0, 60));
+                    if (response.Content.ToString().ToLower() == "confirm")
+                    {
+                        var KickDM = await KickUser.CreateDMChannelAsync();
 
-                    await KickDM.SendErrorAsync($"You were banned from: {Context.Guild.Name}", $"**Date:** {time} UTC \n" +
-                                                                                               $"**Reason:** {reason}");
+                        await KickDM.SendErrorAsync($"You were banned from: {Context.Guild.Name}", $"**Date:** {time} UTC \n" +
+                                                                                                   $"**Reason:** {reason}");
 
-                    await KickUser.KickAsync();
+                        await KickUser.KickAsync();
 
-                    await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n {KickUser} was kicked from this server.");
+                        await Context.Channel.SendConfirmAsync($"{Context.Message.Author.Mention}\n {KickUser} was kicked from this server.");
+                    }
+                    else
+                    {
+                        await Context.Channel.SendErrorAsync($"User {KickUser} was not banned.");
+                    }
                 }
                 catch
                 {
