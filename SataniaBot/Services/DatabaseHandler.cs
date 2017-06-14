@@ -434,7 +434,7 @@ namespace SataniaBot.Services
 
             conn.Open();
 
-            var command = new MySqlCommand($"DELETE FROM `tromobot`.`serverroles` WHERE `serverid`='{serverid}' AND `rolename`= @rolename;", conn);
+            var command = new MySqlCommand($"DELETE FROM `serverroles` WHERE `serverid`='{serverid}' AND `rolename`= @rolename;", conn);
             command.Parameters.AddWithValue("@rolename", role.Name);
 
             MySqlDataReader reader = command.ExecuteReader();
@@ -450,7 +450,7 @@ namespace SataniaBot.Services
 
             conn.Open();
 
-            var command = new MySqlCommand($"SELECT rolename FROM `tromobot`.`serverroles` WHERE `serverid`='{serverid}';", conn);
+            var command = new MySqlCommand($"SELECT rolename FROM `serverroles` WHERE `serverid`='{serverid}';", conn);
 
             MySqlDataReader reader = command.ExecuteReader();
 
