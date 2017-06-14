@@ -125,12 +125,12 @@ namespace SataniaBot.Modules
                 await Context.Channel.SendMessageAsync(Proposal.Mention + ", " + Context.Message.Author.Mention + " wants to marry you. Write `yes` to accept or `no` to decline. You have a minute to respond.");
                 var response = await WaitForMessage(Proposal, Context.Channel, new TimeSpan(0, 0, 60), new MessageContainsResponsePrecondition("yes", "no"));
 
-                if (response.Content.ToString().ToLower() == "y" || response.Content.ToString().ToLower() == "yes")
+                if (response.Content.ToString().ToLower() == "yes")
                 {
                     await ReplyAsync("The person accepted your proposal. :heart:");
                     Satania.db.addMarriage(Context.Message.Author.Id.ToString(), Proposal.Id.ToString());
                 }
-                else if(response.Content.ToString().ToLower() == "n" || response.Content.ToString().ToLower() == "no")
+                else if(response.Content.ToString().ToLower() == "no")
                 {
                     await ReplyAsync("You got denied. :frowning:");
                 }
@@ -161,15 +161,15 @@ namespace SataniaBot.Modules
             }
             else
             {
-                await Context.Channel.SendMessageAsync(Proposal.Mention + ", " + Context.Message.Author.Mention + " wants to divorce you. Write `y/yes` to accept or `n/no` to decline. You have a minute to respond.");
-                var response = await WaitForMessage(Proposal, Context.Channel, new TimeSpan(0, 0, 60), new MessageContainsResponsePrecondition("y", "yes", "no", "n"));
+                await Context.Channel.SendMessageAsync(Proposal.Mention + ", " + Context.Message.Author.Mention + " wants to divorce you. Write `yes` to accept or `no` to decline. You have a minute to respond.");
+                var response = await WaitForMessage(Proposal, Context.Channel, new TimeSpan(0, 0, 60), new MessageContainsResponsePrecondition("yes", "no"));
 
-                if (response.Content.ToString().ToLower() == "y" || response.Content.ToString().ToLower() == "yes")
+                if (response.Content.ToString().ToLower() == "yes")
                 {
                     await ReplyAsync("The person accepted the divorce.");
                     Satania.db.removeMarriage(Context.Message.Author.Id.ToString(), Proposal.Id.ToString());
                 }
-                else if (response.Content.ToString().ToLower() == "n" || response.Content.ToString().ToLower() == "no")
+                else if (response.Content.ToString().ToLower() == "no")
                 {
                     await ReplyAsync("The person didn't accept the divorce. You are still married.");
                 }
