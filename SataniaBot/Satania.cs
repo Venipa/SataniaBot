@@ -51,6 +51,7 @@ namespace SataniaBot
 
             Console.WriteLine("Connected to Discord Chat Service.\nServers: " + guildcount + " Channels: " + channelcount + " Users: " + usercount, System.Drawing.Color.LawnGreen);
 
+            await _client.SetGameAsync($"erin.tokyotown.xyz | s?commands | Serving {usercount} users.");
 
             foreach(SocketGuild guild in _client.Guilds)
             {
