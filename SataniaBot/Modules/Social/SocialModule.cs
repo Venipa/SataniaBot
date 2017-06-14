@@ -122,8 +122,8 @@ namespace SataniaBot.Modules
             }
             else
             {
-                await Context.Channel.SendMessageAsync(Proposal.Mention + ", " + Context.Message.Author.Mention + " wants to marry you. Write `y/yes` to accept or `n/no` to decline. You have a minute to respond.");
-                var response = await WaitForMessage(Proposal, Context.Channel, new TimeSpan(0, 0, 60), new MessageContainsResponsePrecondition("y", "yes", "no", "n"));
+                await Context.Channel.SendMessageAsync(Proposal.Mention + ", " + Context.Message.Author.Mention + " wants to marry you. Write `yes` to accept or `no` to decline. You have a minute to respond.");
+                var response = await WaitForMessage(Proposal, Context.Channel, new TimeSpan(0, 0, 60), new MessageContainsResponsePrecondition("yes", "no"));
 
                 if (response.Content.ToString().ToLower() == "y" || response.Content.ToString().ToLower() == "yes")
                 {
