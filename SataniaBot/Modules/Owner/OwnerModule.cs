@@ -65,6 +65,8 @@ namespace SataniaBot.Modules
             if (Game == null)
                 Game = "";
 
+            await Satania._client.SetGameAsync(Game);
+
             await Context.Channel.SendConfirmAsync("Set game to: " + Game);
         }
 
