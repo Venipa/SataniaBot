@@ -13,9 +13,10 @@ namespace Cleverbot.Net
         /// </summary>
         /// <param name="apikey">Your api key obtained from https://cleverbot.com/api/</param>
         /// <param name="sendTestMessage">Send a test message to be sure you're connected</param>
-        public CleverbotSession(string apikey, bool sendTestMessage = true)
+        /// <param name="ignoreApiKey">Ignores the empty API Key, only use it for debugging</param>
+        public CleverbotSession(string apikey, bool sendTestMessage = false, bool ignoreApiKey = true)
         {
-            if (string.IsNullOrWhiteSpace(apikey))
+            if (string.IsNullOrWhiteSpace(apikey) && ignoreApiKey)
             {
                 throw new Exception("You can't connect without a API key.");
             }

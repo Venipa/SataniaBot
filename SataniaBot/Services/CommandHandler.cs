@@ -15,9 +15,10 @@ namespace SataniaBot.Services
     {
         private DiscordSocketClient _client;
         public CommandService _cmds;
-        CleverbotSession cleverbot = new CleverbotSession(Configuration.Load().CleverbotApi);
+        CleverbotSession cleverbot = new CleverbotSession(Configuration.Load().CleverbotApi, false, Configuration.Load().EnableCleverbot);
 
-
+        public static string serverPrefix { get; set; }
+        private static string defaultPrefix = "s?";
         public async Task Install(DiscordSocketClient c)
         {
             _client = c;                                                 // Save an instance of the discord client.
@@ -46,7 +47,8 @@ namespace SataniaBot.Services
                 Satania.db.updateTimer(s.Author.Id.ToString());
             }
 
-            var serverPrefix = Satania.db.getPrefix((s.Channel as IGuildChannel)?.Guild.Id.ToString());
+            IGuild guild = (s.Channel as IGuildChannel)?.Guild;
+            serverPrefix = Satania.db.getPrefix(guild.Id.ToString());
             var msg = s as SocketUserMessage;
             if (msg == null)                                          // Check if the received message is from a user.
                 return;
@@ -55,16 +57,18 @@ namespace SataniaBot.Services
 
             var context = new SocketCommandContext(_client, msg);     // Create a new command context.
 
-            int argPos = 0;                                           // Check if the message has either a string or mention prefix.
+            int argPos = 0;
+            // Check if the message has either a string or mention prefix.
+            IResult result = null;
             if (msg.HasStringPrefix(serverPrefix, ref argPos) ||
-                msg.HasStringPrefix("s?", ref argPos))
+                msg.HasStringPrefix(defaultPrefix, ref argPos))
             {                                                         // Try and execute a command with the given context.
-                var result = await _cmds.ExecuteAsync(context, argPos);
+                result = await _cmds.ExecuteAsync(context, argPos);
                 if (result.IsSuccess)
                 {
                     Satania.db.incrementCommands();
                     Console.WriteLine("\nCommand " + s.Content + " used by user " + s.Author + ":", System.Drawing.Color.Cyan);
-                    Console.WriteLine("In Server: " + (s.Channel as IGuildChannel).Guild.Name + $" ({(s.Channel as IGuildChannel).Guild.Id})", System.Drawing.Color.Cyan);
+                    Console.WriteLine("In Server: " + guild.Name + $" ({guild.Id})", System.Drawing.Color.Cyan);
                     Console.WriteLine("In Channel: " + s.Channel.Name + $" ({s.Channel.Id})", System.Drawing.Color.Cyan);
                 }
                 //if (!result.IsSuccess)                                // If execution failed, reply with the error message.
@@ -77,6 +81,37 @@ namespace SataniaBot.Services
                 await context.Channel.TriggerTypingAsync();
                 var response = await cleverbot.GetResponseAsync(test);
                 await msg.Channel.SendMessageAsync(response.Response);
+            }
+
+            // Same If like above, but without repeating the code, Logs all commands only if it has been set to a channel and if the Command Execution is successfully.
+            // Logs: User(Silent Mention), Command with Parameters and Channel
+            if((msg.HasStringPrefix(serverPrefix, ref argPos)
+                || msg.HasStringPrefix(defaultPrefix, ref argPos)
+                || msg.HasMentionPrefix(_client.CurrentUser, ref argPos))
+                && result != null && result.IsSuccess)
+            {
+                ulong logId = Satania.db.getLog(guild.Id.ToString());
+                if (logId != 0)
+                {
+                    EmbedBuilder logMsg = new EmbedBuilder();
+                    logMsg.Color = new Discord.Color(33, 150, 243);
+                    EmbedFieldBuilder logAuthor = new EmbedFieldBuilder();
+                    logAuthor.IsInline = true;
+                    logAuthor.Name = "Username";
+                    logAuthor.Value = $"{s.Author.Mention}";
+                    logMsg.AddField(logAuthor);
+                    EmbedFieldBuilder logChannel = new EmbedFieldBuilder();
+                    logChannel.IsInline = true;
+                    logChannel.Name = "Channel";
+                    logChannel.Value = $"#{s.Channel.Name} ({s.Channel.Id})";
+                    logMsg.AddField(logChannel);
+                    EmbedFieldBuilder logCommand = new EmbedFieldBuilder();
+                    logCommand.IsInline = false;
+                    logCommand.Name = "Command";
+                    logCommand.Value = s.Content;
+                    logMsg.AddField(logCommand);
+                    var logresult = await (_client.GetChannel(logId) as IMessageChannel).SendMessageAsync("", false, embed: logMsg);
+                }
             }
         }
     }
