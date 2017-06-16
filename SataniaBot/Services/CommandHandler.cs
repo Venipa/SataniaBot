@@ -46,7 +46,7 @@ namespace SataniaBot.Services
             {
                 Satania.db.updateTimer(s.Author.Id.ToString());
             }
-            else if ((nowTime - oldTime).Value.TotalSeconds > 0)
+            else if ((nowTime - oldTime).Value.TotalSeconds > 60)
             {
                 Satania.db.incrementExperience(s, xpRandom.Next(10, 15));
                 Satania.db.updateTimer(s.Author.Id.ToString());
