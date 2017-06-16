@@ -31,29 +31,26 @@ namespace SataniaBot.Services
 
         private async Task HandleCommand(SocketMessage s)
         {
-
-            DateTime? nowTime = DateTime.Now;
-            DateTime? oldTime = Satania.db.getTimer(s.Author.Id.ToString());
-
-            Random xpRandom = new Random();
-
-            if (oldTime == null)
-            {
-                Satania.db.updateTimer(s.Author.Id.ToString());
-            }
-            else if((nowTime - oldTime).Value.TotalSeconds > 60.0)
-            {
-                Satania.db.incrementExperience(s.Author.Id.ToString(), xpRandom.Next(10,15));
-                Satania.db.updateTimer(s.Author.Id.ToString());
-            }
-
-            IGuild guild = (s.Channel as IGuildChannel)?.Guild;
-            serverPrefix = Satania.db.getPrefix(guild.Id.ToString());
             var msg = s as SocketUserMessage;
             if (msg == null)                                          // Check if the received message is from a user.
                 return;
             if(s.Author.IsBot)                                        // Check if the author of the message is a bot.
                 return;
+
+            IGuild guild = (s.Channel as IGuildChannel)?.Guild;
+            serverPrefix = Satania.db.getPrefix(guild.Id.ToString());
+            Random xpRandom = new Random();
+            DateTime? nowTime = DateTime.Now;
+            DateTime? oldTime = Satania.db.getTimer(s.Author.Id.ToString());
+            if (oldTime == null)
+            {
+                Satania.db.updateTimer(s.Author.Id.ToString());
+            }
+            else if ((nowTime - oldTime).Value.TotalSeconds > 0)
+            {
+                Satania.db.incrementExperience(s, xpRandom.Next(10, 15));
+                Satania.db.updateTimer(s.Author.Id.ToString());
+            }
 
             var context = new SocketCommandContext(_client, msg);     // Create a new command context.
 

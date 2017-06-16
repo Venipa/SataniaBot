@@ -6,12 +6,13 @@ using Discord;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using SataniaBot.Database.Tables;
+using System.Threading.Tasks;
 
 namespace SataniaBot.Services
 {
     public class DatabaseHandler
     {
-        
+
         Database.Tables.MySqlContext context;
         public DatabaseHandler()
         {
@@ -23,9 +24,10 @@ namespace SataniaBot.Services
         {
             try
             {
-                
+
                 return false;
-            } catch
+            }
+            catch
             {
                 return false;
             }
@@ -36,7 +38,7 @@ namespace SataniaBot.Services
             try
             {
                 var res = context.serversettings.FirstOrDefault(x => x.serverid == guildid);
-                if(res != null)
+                if (res != null)
                 {
                     return res.commandprefix;
                 }
@@ -53,7 +55,7 @@ namespace SataniaBot.Services
             try
             {
                 var res = context.logchannels.FirstOrDefault(x => x.serverid == guildid);
-                if(res != null)
+                if (res != null)
                 {
                     return Convert.ToUInt64(res.channelid);
                 }
@@ -78,7 +80,8 @@ namespace SataniaBot.Services
 
         public void addServer(SocketGuild s)
         {
-            context.serversettings.Add(new serversettings {
+            context.serversettings.Add(new serversettings
+            {
                 serverid = s.DefaultChannel.Id.ToString(),
                 commandprefix = "s?"
             });
@@ -95,11 +98,11 @@ namespace SataniaBot.Services
             {
 
                 var res = context.usermarriages.FirstOrDefault(x => x.userid == userid);
-                if(res != null)
+                if (res != null)
                 {
                     return res.marriedid;
                 }
-                
+
                 return null;
             }
             catch (Exception e)
@@ -111,6 +114,9 @@ namespace SataniaBot.Services
 
         public void addMarriage(string person1, string person2)
         {
+            if (person1 == person2)
+                return;
+
             context.usermarriages.Add(new usermarriages
             {
                 userid = person1,
@@ -128,7 +134,7 @@ namespace SataniaBot.Services
         {
             var p1 = context.usermarriages.FirstOrDefault(x => x.userid == person1);
             var p2 = context.usermarriages.FirstOrDefault(x => x.userid == person2);
-            if(p1 != null && p2 != null)
+            if (p1 != null && p2 != null)
             {
                 context.usermarriages.Remove(p1);
                 context.usermarriages.Remove(p2);
@@ -139,7 +145,7 @@ namespace SataniaBot.Services
         public void updateWebStats(int servernum, int channelnum, int usernum)
         {
             var res = context.usagestats.FirstOrDefault(x => x.key == Convert.ToInt32(botNameId.Satania));
-            if(res != null)
+            if (res != null)
             {
                 res.servercount = servernum;
                 res.channelcount = channelnum;
@@ -152,7 +158,7 @@ namespace SataniaBot.Services
         public void incrementCommands()
         {
             var res = context.usagestats.FirstOrDefault(x => x.key == Convert.ToInt32(botNameId.Satania));
-            if(res != null)
+            if (res != null)
             {
                 res.commandusage++;
                 context.usagestats.Update(res);
@@ -173,7 +179,7 @@ namespace SataniaBot.Services
         public void removeNsfwChannel(string channelid)
         {
             var res = context.nsfwchannels.FirstOrDefault(x => x.channelid == channelid);
-            if(res != null)
+            if (res != null)
             {
                 context.nsfwchannels.Remove(res);
                 context.SaveChanges();
@@ -186,7 +192,7 @@ namespace SataniaBot.Services
             {
                 var res = context.nsfwchannels.FirstOrDefault(x => x.channelid == channelid);
 
-                if(res != null)
+                if (res != null)
                 {
                     return true;
                 }
@@ -242,7 +248,7 @@ namespace SataniaBot.Services
         {
 
             var res = context.experiencetimers.FirstOrDefault(x => x.userid == userid);
-            if(res != null)
+            if (res != null)
             {
                 return Convert.ToDateTime(res.lastmessage);
             }
@@ -254,7 +260,8 @@ namespace SataniaBot.Services
             DateTime Now = DateTime.Now;
             if (getTimer(userid) == null)
             {
-                context.experiencetimers.Add(new experiencetimers() {
+                context.experiencetimers.Add(new experiencetimers()
+                {
                     userid = userid,
                     lastmessage = Now
                 });
@@ -262,7 +269,7 @@ namespace SataniaBot.Services
             else
             {
                 var res = context.experiencetimers.FirstOrDefault(x => x.userid == userid);
-                if(res != null)
+                if (res != null)
                 {
                     res.lastmessage = Now;
                 }
@@ -270,19 +277,73 @@ namespace SataniaBot.Services
             context.SaveChanges();
         }
 
-
-
-        public void incrementExperience(string userid, int experiencegain)
+        public int getRep(string userid)
         {
-            var res = context.userexperience.FirstOrDefault(x => x.userid == userid);
-            if(res != null)
+            var res = context.userrep.Count(x => x.repid == userid);
+            return res;
+        }
+        public string setRep(SocketUser user, string repid)
+        {
+            var res = context.userreptimers.FirstOrDefault(x => x.userid == user.Id.ToString());
+            if (res != null)
+            {
+                TimeSpan remainingTime = (DateTime.Now - res.lastrep);
+                if (remainingTime.TotalHours > 24)
+                {
+                    context.userrep.Add(new userrep()
+                    {
+                        userid = user.Id.ToString(),
+                        repid = repid
+                    });
+                    res.lastrep = DateTime.Now;
+                    context.userreptimers.Update(res);
+                    context.SaveChanges();
+                    return null;
+                }
+                else
+                {
+                    var remaining = TimeSpan.FromHours(24) - remainingTime;
+                    return $"**{remaining.Hours} Hour{(remaining.Hours > 1 ? "s" : "")}**, **{remaining.Minutes} Minute{(remaining.Minutes > 1 ? "s" : "")}** and **{remaining.Seconds} Second{(remaining.Seconds > 1 ? "s":"")}** until you can Rep someone again.";
+                }
+            }
+            else
+            {
+                context.userrep.Add(new userrep()
+                {
+                    userid = user.Id.ToString(),
+                    repid = repid
+                });
+
+                context.userreptimers.Add(new userreptimers()
+                {
+                    userid = user.Id.ToString(),
+                    lastrep = DateTime.Now
+                });
+                context.SaveChanges();
+                return null;
+            }
+
+        }
+
+        public void incrementExperience(SocketMessage msg, int experiencegain)
+        {
+            var user = msg.Author;
+            var res = context.userexperience.FirstOrDefault(x => x.userid == user.Id.ToString());
+            if (res != null)
             {
                 res.experience += experiencegain;
-            } else
+                var current = getLevel(user.Id.ToString());
+                if ((current.currentExp + experiencegain) > current.levelExp)
+                {
+                    msg.Channel.SendMessageAsync($"{msg.Author.Mention} had leveled to Lv.{++current.level}");
+                }
+            }
+            else
             {
-                context.userexperience.Add(new userexperience() {
+                context.userexperience.Add(new userexperience()
+                {
                     experience = experiencegain,
-                    userid = userid
+                    userid = user.Id.ToString()
                 });
             }
             context.SaveChanges();
@@ -292,7 +353,7 @@ namespace SataniaBot.Services
         public int? getExperience(string userid)
         {
             var res = context.userexperience.FirstOrDefault(x => x.userid == userid);
-            if(res != null)
+            if (res != null)
             {
                 return res.experience as int?;
             }
@@ -302,7 +363,7 @@ namespace SataniaBot.Services
         public (int? level, int? currentExp, int? levelExp) getLevel(string userid)
         {
             var res = context.userexperience.FirstOrDefault(x => x.userid == userid);
-            if(res != null)
+            if (res != null)
             {
                 var totalExp = res.experience;
 
@@ -331,7 +392,8 @@ namespace SataniaBot.Services
 
         public void addRole(IRole role, string serverid)
         {
-            context.serverroles.Add(new serverroles() {
+            context.serverroles.Add(new serverroles()
+            {
                 serverid = serverid,
                 roleid = role.Id.ToString(),
                 rolename = role.Name
@@ -355,7 +417,7 @@ namespace SataniaBot.Services
 
         public bool checkServerRole(string serverid, string roleid)
         {
-            if(context.serverroles.Count(x => x.serverid == serverid && x.roleid == roleid) > 0)
+            if (context.serverroles.Count(x => x.serverid == serverid && x.roleid == roleid) > 0)
             {
                 return true;
             }

@@ -24,6 +24,8 @@ namespace SataniaBot.Database.Tables
         public DbSet<usagestats> usagestats { get; set; }
         public DbSet<userexperience> userexperience { get; set; }
         public DbSet<usermarriages> usermarriages { get; set; }
+        public DbSet<userrep> userrep { get; set; }
+        public DbSet<userreptimers> userreptimers { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
             => optionsBuilder
@@ -101,5 +103,23 @@ namespace SataniaBot.Database.Tables
         public string userid { get; set; }
         [MaxLength(50)]
         public string marriedid { get; set; }
+    }
+    public class userrep
+    {
+        [Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        public int id { get; set; }
+
+        [MaxLength(50), Required]
+        public string userid { get; set; }
+
+        [MaxLength(50), Required]
+        public string repid { get; set; }
+    }
+    public class userreptimers
+    {
+        [MaxLength(50), Key, Required]
+        public string userid { get; set; }
+
+        public DateTime lastrep { get; set; }
     }
 }

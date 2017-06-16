@@ -204,6 +204,25 @@ namespace SataniaBot.Modules
                     await Context.Channel.SendImageEmbedAsync(User.GetAvatarUrl(ImageFormat.Auto, 1024), "Avatar for user " + User.Username + ":");
             }
         }
+        [Command("rep")]
+        [Summary("rep someone")]
+        [Remarks("rep cascade")]
+        public async Task Rep(SocketUser User = null)
+        {
+            if(User == null)
+            {
+                await Context.Channel.SendErrorAsync($"**{Context.Message.Author.Mention} you can't give yourself a reputation point!**");
+                return;
+            }
+            string res = Satania.db.setRep(Context.Message.Author, User.Id.ToString());
+            if(res != null)
+            {
+                await Context.Channel.SendErrorAsync(res);
+            } else
+            {
+                await Context.Channel.SendConfirmAsync($"**{Context.Message.Author.Username} has given {User.Mention} a reputation point!**");
+            }
+        }
 
     }
 }
