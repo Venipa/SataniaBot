@@ -279,8 +279,8 @@ namespace SataniaBot.Services
 
         public int getRep(string userid)
         {
-            var res = context.userrep.Count(x => x.repid == userid);
-            return res;
+            var res = context.userrep.FirstOrDefault(x => x.userid == userid);
+            return res.reps;
         }
         public string setRep(SocketUser user, string repid)
         {
@@ -290,11 +290,9 @@ namespace SataniaBot.Services
                 TimeSpan remainingTime = (DateTime.Now - res.lastrep);
                 if (remainingTime.TotalHours > 24)
                 {
-                    context.userrep.Add(new userrep()
-                    {
-                        userid = user.Id.ToString(),
-                        repid = repid
-                    });
+                    var reps = context.userrep.FirstOrDefault(x => x.userid == repid);
+                    reps.reps++;
+                    context.userrep.Update(reps);
                     res.lastrep = DateTime.Now;
                     context.userreptimers.Update(res);
                     context.SaveChanges();
@@ -310,8 +308,8 @@ namespace SataniaBot.Services
             {
                 context.userrep.Add(new userrep()
                 {
-                    userid = user.Id.ToString(),
-                    repid = repid
+                    userid = repid,
+                    reps = 1
                 });
 
                 context.userreptimers.Add(new userreptimers()

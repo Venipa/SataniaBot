@@ -209,7 +209,7 @@ namespace SataniaBot.Modules
         [Remarks("rep cascade")]
         public async Task Rep(SocketUser User = null)
         {
-            if(User == null)
+            if(User == null || User == Context.Message.Author)
             {
                 await Context.Channel.SendErrorAsync($"**{Context.Message.Author.Mention} you can't give yourself a reputation point!**");
                 return;
