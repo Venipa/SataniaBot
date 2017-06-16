@@ -113,7 +113,7 @@ namespace SataniaBot.Database.Tables
         [MaxLength(50), Required]
         public string userid { get; set; }
 
-        [MaxLength(50), Required]
+        [MaxLength(11), Required]
         public int reps { get; set; }
     }
     public class userreptimers
