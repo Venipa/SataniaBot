@@ -285,14 +285,14 @@ namespace SataniaBot.Services
         public string setRep(SocketUser user, string repid)
         {
             var res = context.userreptimers.FirstOrDefault(x => x.userid == user.Id.ToString());
-            if (res != null)
+            var r = context.userrep.FirstOrDefault(x => x.userid == repid);
+            if (res != null && r != null)
             {
                 TimeSpan remainingTime = (DateTime.Now - res.lastrep);
                 if (remainingTime.TotalHours > 24)
                 {
-                    var reps = context.userrep.FirstOrDefault(x => x.userid == repid);
-                    reps.reps++;
-                    context.userrep.Update(reps);
+                    r.reps += 1;
+                    context.userrep.Update(r);
                     res.lastrep = DateTime.Now;
                     context.userreptimers.Update(res);
                     context.SaveChanges();
