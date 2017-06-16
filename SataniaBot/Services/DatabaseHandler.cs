@@ -306,17 +306,31 @@ namespace SataniaBot.Services
             }
             else
             {
-                context.userrep.Add(new userrep()
+                if(r != null)
                 {
-                    userid = repid,
-                    reps = 1
-                });
+                    r.reps += 1;
+                    context.userrep.Update(r);
+                } else
+                {
+                    context.userrep.Add(new userrep()
+                    {
+                        userid = repid,
+                        reps = 1
+                    });
+                }
 
-                context.userreptimers.Add(new userreptimers()
+                if(res != null)
                 {
-                    userid = user.Id.ToString(),
-                    lastrep = DateTime.Now
-                });
+                    res.lastrep = DateTime.Now;
+                    context.userreptimers.Update(res);
+                } else
+                {
+                    context.userreptimers.Add(new userreptimers()
+                    {
+                        userid = user.Id.ToString(),
+                        lastrep = DateTime.Now
+                    });
+                }
                 context.SaveChanges();
                 return null;
             }
