@@ -77,7 +77,7 @@ namespace SataniaBot.Modules.Social
                 // Header CreatedAt
                 profile.Draw(new Drawables()
                     .FillColor(new MagickColor("#eeeeee"))
-                    .Text(80, 40, User.CreatedAt.ToString("yyyy/mm/dd HH:mm"))
+                    .Text(80, 40, User.CreatedAt.ToString("d"))
                     .Font("sans-serif", FontStyleType.Normal, FontWeight.Normal, FontStretch.Normal)
                     .FontPointSize(10));
 
