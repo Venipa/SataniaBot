@@ -16,10 +16,10 @@ namespace SataniaBot.Modules
     [Name("Moderation")]
     public class ModerationModule : InteractiveModuleBase<SocketCommandContext>
     {
-        
+
         [Command("setprefix")]
         [Summary("Sets server prefix")]
-        [Remarks("s?setprefix ~")]
+        [Remarks("setprefix ~")]
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task SetPrefix(string Prefix = null)
         {
@@ -40,7 +40,7 @@ namespace SataniaBot.Modules
 
         [Command("ban", RunMode = RunMode.Async)]
         [Summary("Bans a user from the server and deletes last day of messages")]
-        [Remarks("s?ban reddeyez")]
+        [Remarks("ban reddeyez")]
         [RequireBotPermission(GuildPermission.BanMembers)]
         [RequireUserPermission(GuildPermission.BanMembers)]
         public async Task Ban(SocketGuildUser BanUser = null, [Remainder]string reason = null)
@@ -86,7 +86,7 @@ namespace SataniaBot.Modules
                     else
                     {
                         await Context.Channel.SendErrorAsync($"User {BanUser} was not banned.");
-                    }    
+                    }
                 }
                 catch
                 {
@@ -97,7 +97,7 @@ namespace SataniaBot.Modules
 
         [Command("kick", RunMode = RunMode.Async)]
         [Summary("Kicks a user from the server")]
-        [Remarks("s?kick kbuns")]
+        [Remarks("kick kbuns")]
         [RequireBotPermission(GuildPermission.KickMembers)]
         [RequireUserPermission(GuildPermission.KickMembers)]
         public async Task Kick(SocketGuildUser KickUser = null, [Remainder]string reason = null)
@@ -118,7 +118,8 @@ namespace SataniaBot.Modules
             {
                 await Context.Channel.SendErrorAsync("You can't kick someone with a role higher or equal to yours.");
             }
-            else {
+            else
+            {
                 try
                 {
                     if (string.IsNullOrWhiteSpace(reason))
@@ -153,7 +154,7 @@ namespace SataniaBot.Modules
 
         [Command("prune")]
         [Summary("Prunes number of messages you want, up to 100")]
-        [Remarks("s?prune 27")]
+        [Remarks("prune 27")]
         [RequireBotPermission(GuildPermission.ManageMessages)]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task Prune(int PruneNumber = 10)
@@ -176,7 +177,7 @@ namespace SataniaBot.Modules
 
         [Command("togglensfw")]
         [Summary("Sets a certain channel to be a nsfw channel, allowing nsfw commands in it")]
-        [Remarks("s?togglensfw")]
+        [Remarks("togglensfw")]
         [RequireUserPermission(GuildPermission.Administrator)]
         public async Task ToggleNSFW()
         {
@@ -189,6 +190,23 @@ namespace SataniaBot.Modules
             {
                 Satania.db.addNsfwChannel(Context.Channel.Id.ToString());
                 await Context.Channel.SendConfirmAsync("Channel has been added as an NSFW channel.");
+            }
+        }
+        [Command("togglelog")]
+        [Summary("Sets a certain channel to be a log channel, allowing admins to see who executed a command.")]
+        [Remarks("togglelog")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        public async Task ToggleLog()
+        {
+            if (Satania.db.checkLog(Context.Guild.Id.ToString()))
+            {
+                Satania.db.removeLogChannel(Context.Guild.Id.ToString());
+                await Context.Channel.SendErrorAsync("Channel has been removed as an Log channel.");
+            }
+            else
+            {
+                Satania.db.addLogChannel(Context.Channel.Id.ToString(), Context.Guild.Id.ToString());
+                await Context.Channel.SendConfirmAsync("Channel has been added as an Log channel.");
             }
         }
     }

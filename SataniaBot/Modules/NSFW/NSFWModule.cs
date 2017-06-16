@@ -17,7 +17,7 @@ namespace SataniaBot.Modules
     {
         [Command("safebooru")]
         [Summary("Gets image from safebooru and sends image. Gives random image if no tag.")]
-        [Remarks("s?safebooru kizuna_ai")]
+        [Remarks("safebooru kizuna_ai")]
         public async Task Safebooru([Remainder]string tags = null)
         {
             if (tags == null)
@@ -39,7 +39,7 @@ namespace SataniaBot.Modules
 
         [Command("gelbooru")]
         [Summary("Gets image from gelbooru and sends image. Add +rating:explicit to the end for NSFW only. Gives random NSFW image if no tag.")]
-        [Remarks("s?gelbooru kizuna_ai+rating:explicit")]
+        [Remarks("gelbooru kizuna_ai+rating:explicit")]
         public async Task Gelbooru([Remainder]string tags = null)
         {
             if (tags == null)
@@ -61,7 +61,7 @@ namespace SataniaBot.Modules
 
         [Command("rule34")]
         [Summary("Gets image from rule34 and sends image. Add +rating:explicit to the end for NSFW only. Gives random NSFW image if no tag.")]
-        [Remarks("s?rule34 kizuna_ai+rating:explicit")]
+        [Remarks("rule34 kizuna_ai+rating:explicit")]
         public async Task Rule34([Remainder]string tags = null)
         {
             if (tags == null)
@@ -83,7 +83,7 @@ namespace SataniaBot.Modules
 
         [Command("konachan")]
         [Summary("Gets image from konachan and sends image. Gives random image if no tag.")]
-        [Remarks("s?konachan dark souls")]
+        [Remarks("konachan dark souls")]
         public async Task Konachan([Remainder]string tags = null)
         {
             if (tags == null)
@@ -105,7 +105,7 @@ namespace SataniaBot.Modules
 
         [Command("yandere")]
         [Summary("Gets image from yandere and sends image. Add +rating:explicit to the end for NSFW only. Gives random NSFW image if no tag.")]
-        [Remarks("s?yandere kizuna_ai+rating:explicit")]
+        [Remarks("yandere kizuna_ai+rating:explicit")]
         public async Task Yandere([Remainder]string tags = null)
         {
             if (tags == null)
@@ -127,7 +127,7 @@ namespace SataniaBot.Modules
 
         [Command("e621")]
         [Summary("Gets image from e621 and sends image. Add +rating:explicit to the end for NSFW only. Gives random NSFW image if no tag.")]
-        [Remarks("s?e621 dragon+rating:explicit")]
+        [Remarks("e621 dragon+rating:explicit")]
         public async Task E621([Remainder]string tags = null)
         {
             if (tags == null)

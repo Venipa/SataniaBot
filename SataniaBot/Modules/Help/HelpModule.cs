@@ -14,28 +14,27 @@ namespace SataniaBot.Modules.Help
 
         [Command("commands")]
         [Summary("Lists all commands")]
-        [Remarks("s?commands")]
+        [Remarks("commands")]
         public async Task Commands()
         {
             EmbedBuilder embed = new EmbedBuilder();
             embed.Color = new Color(114, 137, 218);
 
             EmbedAuthorBuilder Author = new EmbedAuthorBuilder();
-            Author.Name = "List of commands for Satania:";
+            Author.Name = string.Format("List of commands for {0}:", Satania._client.CurrentUser.Username);
             Author.IconUrl = Satania._client.CurrentUser.GetAvatarUrl();
 
             embed.Author = Author;
 
             foreach (var m in Satania._commands._cmds.Modules)
             {
-                if(!(m.Name.ToLower() == "owner")) { 
-                    EmbedFieldBuilder embedfield = new EmbedFieldBuilder();
-                    embedfield.IsInline = false;
-                    embedfield.Name = $"**{m.Name}**";
-                    embedfield.Value = string.Join(", ", m.Commands.Select(x => x.Aliases.First()));
+                EmbedFieldBuilder embedfield = new EmbedFieldBuilder();
+                embedfield.IsInline = false;
+                embedfield.Name = $"**{m.Name}**";
+                embedfield.Value = string.Join(", ", m.Commands.Select(x => x.Aliases.First()));
 
-                    embed.AddField(embedfield);
-                }
+                embed.AddField(embedfield);
+
             }
 
             await ReplyAsync("", embed:embed);
@@ -44,7 +43,7 @@ namespace SataniaBot.Modules.Help
 
         [Command("help")]
         [Summary("Get help for a specific command")]
-        [Remarks("s?help setname")]
+        [Remarks("help setname")]
         public async Task Help(string commandname)
         {
             EmbedBuilder embed = new EmbedBuilder();
@@ -70,15 +69,14 @@ namespace SataniaBot.Modules.Help
             EmbedFieldBuilder parameterField = new EmbedFieldBuilder();
             parameterField.IsInline = true;
             parameterField.Name = "Parameters";
-            string parameters = String.Join(", ", commandinfo.Parameters.Select(x => x.Name));
-                parameterField.Value = $"` {parameters} `";              //Message won't send if no parameters because empty, so this just makes it send something at all
+            string parameters = commandinfo.Parameters.Count > 0 ? String.Join(", ", commandinfo.Parameters.Select(x => x.Name)) : "No Parameters";
+            parameterField.Value = $"` {parameters} `";              //Message won't send if no parameters because empty, so this just makes it send something at all
             embed.AddField(parameterField);
-
             //Command Example
             EmbedFieldBuilder exampleField = new EmbedFieldBuilder();
             exampleField.IsInline = true;
             exampleField.Name = "Example";
-            exampleField.Value = "`" + commandinfo.Remarks + "`";
+            exampleField.Value = "`" + Services.CommandHandler.serverPrefix + commandinfo.Remarks + "`";
             embed.AddField(exampleField);
 
             await ReplyAsync("", embed:embed);

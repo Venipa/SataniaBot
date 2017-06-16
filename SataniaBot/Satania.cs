@@ -11,6 +11,11 @@ using Console = Colorful.Console;
 
 namespace SataniaBot
 {
+    public enum botNameId
+    {
+        Satania = 1,
+        Erin = 2
+    }
     public class Satania
     {
         public static void Main(string[] args)
@@ -35,6 +40,7 @@ namespace SataniaBot
                 => Task.Run(()
                 => Console.WriteLine($"[{l.Severity}] {l.Source}: {l.Exception?.Message ?? l.Message}", System.Drawing.Color.OrangeRed));
             
+
             await _client.LoginAsync(TokenType.Bot, Configuration.Load().Token);
             await _client.StartAsync();
 
@@ -51,7 +57,6 @@ namespace SataniaBot
 
             Console.WriteLine("Connected to Discord Chat Service.\nServers: " + guildcount + " Channels: " + channelcount + " Users: " + usercount, System.Drawing.Color.LawnGreen);
 
-            await _client.SetGameAsync($"erin.tokyotown.xyz | s?commands | Serving {usercount} users.");
 
             foreach(SocketGuild guild in _client.Guilds)
             {

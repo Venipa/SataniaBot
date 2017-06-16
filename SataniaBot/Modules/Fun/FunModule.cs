@@ -15,7 +15,7 @@ namespace SataniaBot.Modules
     {
         [Command("say")]
         [Summary("Echos a message")]
-        [Remarks("s?say hi")]
+        [Remarks("say hi")]
         public async Task Say([Remainder] string EchoMessage)
         {
             if(Context.Message.MentionedRoles.Count > 0)
@@ -27,7 +27,7 @@ namespace SataniaBot.Modules
 
         [Command("ping")]
         [Summary("Pong!")]
-        [Remarks("s?ping")]
+        [Remarks("ping")]
         public async Task Say()
         {
             await ReplyAsync("Pong!"); 
@@ -35,7 +35,7 @@ namespace SataniaBot.Modules
 
         [Command("rng")]
         [Summary("Generates random number between 1-100")]
-        [Remarks("s?rng")]
+        [Remarks("rng")]
         public async Task Random(int MaxValue = 0, int MinValue = 0)
         {
             if (MaxValue < 0 || MinValue < 0)
@@ -62,52 +62,45 @@ namespace SataniaBot.Modules
 
         [Command("love")]
         [Summary("\"Generates\" love between two people")]
-        [Remarks("s?love tromo life")]
+        [Remarks("love <different Person> <differentPerson or yourself(nothing)>")]
         public async Task Love(string User1, [Remainder] string User2 = null)
         {
-            if ((User1.ToLower().Contains("tromo") && User2.ToLower().Contains("kei")) || (User2.ToLower().Contains("tromo") && User1.ToLower().Contains("kei")))
+            string PersonOne = User1;       //note to self: define most things outside for(),foreach() and while() loops unless the variable wont be needed
+            string PersonTwo = User2;
+            int SecondName = 0;
+            int FirstName = 0;
+
+            foreach (char Letter in PersonOne.ToLower())
             {
-                await Context.Channel.SendColouredEmbedAsync("The love between Tromo and Kei is 100%", new Color(219, 91, 255));
-            }
-            else
+                FirstName = +Convert.ToInt32(Letter);
+            };
+
+            foreach (char Letter in PersonTwo.ToLower())      //for each makes the loop run once every one character in the string that is inputted
             {
-                string PersonOne = User1;       //note to self: define most things outside for(),foreach() and while() loops unless the variable wont be needed
-                string PersonTwo = User2;
-                int SecondName = 0;
-                int FirstName = 0;
-
-                foreach (char Letter in PersonOne.ToLower())
-                {
-                    FirstName = +Convert.ToInt32(Letter);
-                };
-
-                foreach (char Letter in PersonTwo.ToLower())      //for each makes the loop run once every one character in the string that is inputted
-                {
-                    SecondName = +Convert.ToInt32(Letter);          //converts the current letter and adds it to the SecondName Total
-                }
-
-                int Seed = SecondName + FirstName;
-
-                Random rngseed = new Random(Seed);
-                var LoveChance = (rngseed.Next(1, 100));
-                // original color value is (219, 91, 255) 
-
-                double Rcolor = 219 / 100 * LoveChance;
-                double Gcolor = 91 / 100 * LoveChance;
-                double Bcolor = 255 / 100 * LoveChance;
-
-                //Console.WriteLine(Rcolor + "," + Gcolor + "," + Bcolor); 
-                //await ReplyAsync($"{RcolorFound}" + $",{GcolorFound}" + $",{BcolorFound}"); 
-
-                Color LoveColor = new Color((byte)Rcolor, (byte)Gcolor, (byte)Bcolor);
-
-                await Context.Channel.SendColouredEmbedAsync("The Love between " + PersonOne + " and " + PersonTwo + " is " + $"{LoveChance}" + "%", LoveColor);
+                SecondName = +Convert.ToInt32(Letter);          //converts the current letter and adds it to the SecondName Total
             }
+
+            int Seed = SecondName + FirstName;
+
+            Random rngseed = new Random(Seed);
+            var LoveChance = (rngseed.Next(1, 100));
+            // original color value is (219, 91, 255) 
+
+            double Rcolor = 219 / 100 * LoveChance;
+            double Gcolor = 91 / 100 * LoveChance;
+            double Bcolor = 255 / 100 * LoveChance;
+
+            //Console.WriteLine(Rcolor + "," + Gcolor + "," + Bcolor); 
+            //await ReplyAsync($"{RcolorFound}" + $",{GcolorFound}" + $",{BcolorFound}"); 
+
+            Color LoveColor = new Color((byte)Rcolor, (byte)Gcolor, (byte)Bcolor);
+
+            await Context.Channel.SendColouredEmbedAsync("The Love between " + PersonOne + " and " + PersonTwo + " is " + $"{LoveChance}" + "%", LoveColor);
         }
 
         [Command("emote")]
         [Summary("Sends full size image of an emote")]
-        [Remarks("s?emote meguButt")]
+        [Remarks("emote meguButt")]
         public async Task Emote(string emote)
         {
             Regex r = new Regex("\\:(\\d.*?[0-9])\\>", RegexOptions.IgnoreCase); //using regex to match the id between the : and > in the emote code

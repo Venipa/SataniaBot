@@ -18,7 +18,7 @@ namespace SataniaBot.Modules
     {
         [Command("roles")]
         [Summary("Shows list of self-assignable roles available in a server.")]
-        [Remarks("s?roles")]
+        [Remarks("roles")]
         public async Task roles()
         {
             var results = Satania.db.getServerRole(Context.Guild.Id.ToString());
@@ -34,7 +34,7 @@ namespace SataniaBot.Modules
 
         [Command("setrole")]
         [Summary("Adds a role to self-assignable roles. Needs manage messages permissions.")]
-        [Remarks("s?setrole civilian")]
+        [Remarks("setrole civilian")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task setrole(IRole role)
         {
@@ -67,7 +67,7 @@ namespace SataniaBot.Modules
 
         [Command("unsetrole")]
         [Summary("Removes a role from self-assignable. Needs manage messages permissions.")]
-        [Remarks("s?unsetrole civilian")]
+        [Remarks("unsetrole civilian")]
         [RequireUserPermission(GuildPermission.ManageMessages)]
         public async Task unsetRole(IRole role)
         {
@@ -84,7 +84,7 @@ namespace SataniaBot.Modules
 
         [Command("giverole")]
         [Summary("Gives you a role from one of the self-assignable ones")]
-        [Remarks("s?giverole civilian")]
+        [Remarks("giverole civilian")]
         public async Task giveRole(IRole role)
         {
             if (Satania.db.checkServerRole(Context.Guild.Id.ToString(), role.Id.ToString()))
@@ -100,7 +100,7 @@ namespace SataniaBot.Modules
 
         [Command("takeRole")]
         [Summary("Removes a role you have from one of the self-assignable ones")]
-        [Remarks("s?takeRole civilian")]
+        [Remarks("takeRole civilian")]
         public async Task takeRole(IRole role)
         {
             if (Satania.db.checkServerRole(Context.Guild.Id.ToString(), role.Id.ToString()))

@@ -15,7 +15,7 @@ namespace SataniaBot.Modules
     {
         [Command("profile")]
         [Summary("Shows specified users profile or your own if unspecified")]
-        [Remarks("s?profile tromodolo")]
+        [Remarks("profile tromodolo")]
         public async Task Profile(IGuildUser User = null)
         {
             if(User == null)
@@ -101,7 +101,7 @@ namespace SataniaBot.Modules
 
         [Command("marry", RunMode = RunMode.Async)]
         [Summary("Proposes to marry to specified person")]
-        [Remarks("s?marry tromodolo")]
+        [Remarks("marry tromodolo")]
         public async Task Marry(IGuildUser Proposal = null)
         {
             if (Proposal == null)
@@ -122,15 +122,15 @@ namespace SataniaBot.Modules
             }
             else
             {
-                await Context.Channel.SendMessageAsync(Proposal.Mention + ", " + Context.Message.Author.Mention + " wants to marry you. Write `yes` to accept or `no` to decline. You have a minute to respond.");
-                var response = await WaitForMessage(Proposal, Context.Channel, new TimeSpan(0, 0, 60), new MessageContainsResponsePrecondition("yes", "no"));
+                await Context.Channel.SendMessageAsync(Proposal.Mention + ", " + Context.Message.Author.Mention + " wants to marry you. Write `y/yes` to accept or `n/no` to decline. You have a minute to respond.");
+                var response = await WaitForMessage(Proposal, Context.Channel, new TimeSpan(0, 0, 60), new MessageContainsResponsePrecondition("y", "yes", "no", "n"));
 
-                if (response.Content.ToString().ToLower() == "yes")
+                if (response.Content.ToString().ToLower() == "y" || response.Content.ToString().ToLower() == "yes")
                 {
                     await ReplyAsync("The person accepted your proposal. :heart:");
                     Satania.db.addMarriage(Context.Message.Author.Id.ToString(), Proposal.Id.ToString());
                 }
-                else if(response.Content.ToString().ToLower() == "no")
+                else if(response.Content.ToString().ToLower() == "n" || response.Content.ToString().ToLower() == "no")
                 {
                     await ReplyAsync("You got denied. :frowning:");
                 }
@@ -140,7 +140,7 @@ namespace SataniaBot.Modules
 
         [Command("divorce", RunMode = RunMode.Async)]
         [Summary("Asks to divorce from specified person if married")]
-        [Remarks("s?divorce tromodolo")]
+        [Remarks("divorce tromodolo")]
         public async Task Divorce(IGuildUser Proposal = null)
         {
             if (Proposal == null)
@@ -161,15 +161,15 @@ namespace SataniaBot.Modules
             }
             else
             {
-                await Context.Channel.SendMessageAsync(Proposal.Mention + ", " + Context.Message.Author.Mention + " wants to divorce you. Write `yes` to accept or `no` to decline. You have a minute to respond.");
-                var response = await WaitForMessage(Proposal, Context.Channel, new TimeSpan(0, 0, 60), new MessageContainsResponsePrecondition("yes", "no"));
+                await Context.Channel.SendMessageAsync(Proposal.Mention + ", " + Context.Message.Author.Mention + " wants to divorce you. Write `y/yes` to accept or `n/no` to decline. You have a minute to respond.");
+                var response = await WaitForMessage(Proposal, Context.Channel, new TimeSpan(0, 0, 60), new MessageContainsResponsePrecondition("y", "yes", "no", "n"));
 
-                if (response.Content.ToString().ToLower() == "yes")
+                if (response.Content.ToString().ToLower() == "y" || response.Content.ToString().ToLower() == "yes")
                 {
                     await ReplyAsync("The person accepted the divorce.");
                     Satania.db.removeMarriage(Context.Message.Author.Id.ToString(), Proposal.Id.ToString());
                 }
-                else if (response.Content.ToString().ToLower() == "no")
+                else if (response.Content.ToString().ToLower() == "n" || response.Content.ToString().ToLower() == "no")
                 {
                     await ReplyAsync("The person didn't accept the divorce. You are still married.");
                 }
@@ -178,7 +178,7 @@ namespace SataniaBot.Modules
 
         [Command("avatar")]
         [Summary("Shows full size image from specified user")]
-        [Remarks("s?avatar tromodolo")]
+        [Remarks("avatar tromodolo")]
         public async Task Avatar(SocketGuildUser User = null)
         {
             if(User == null)
@@ -202,6 +202,25 @@ namespace SataniaBot.Modules
                 }
                 else
                     await Context.Channel.SendImageEmbedAsync(User.GetAvatarUrl(ImageFormat.Auto, 1024), "Avatar for user " + User.Username + ":");
+            }
+        }
+        [Command("rep")]
+        [Summary("rep someone")]
+        [Remarks("rep cascade")]
+        public async Task Rep(SocketUser User = null)
+        {
+            if(User == null)
+            {
+                await Context.Channel.SendErrorAsync($"**{Context.Message.Author.Mention} you can't give yourself a reputation point!**");
+                return;
+            }
+            string res = Satania.db.setRep(Context.Message.Author, User.Id.ToString());
+            if(res != null)
+            {
+                await Context.Channel.SendErrorAsync(res);
+            } else
+            {
+                await Context.Channel.SendConfirmAsync($"**{Context.Message.Author.Username} has given {User.Mention} a reputation point!**");
             }
         }
 
