@@ -88,31 +88,45 @@ namespace SataniaBot.Services
             }
 
         }
+        public void updateMoneyPrefix(SocketGuild s, string suffix)
+        {
+            try
+            {
+                var res = context.serversettings.FirstOrDefault(x => x.serverid == s.Id.ToString());
+                res.currencyname = suffix;
+                res.servername = s.Name;
+                res.serverid = s.DefaultChannel.Id.ToString();
+                context.serversettings.Update(res);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+        }
 
 
         public void addServerAsync(SocketGuild s)
         {
             try
             {
-<<<<<<< HEAD
                 var res = context.serversettings.FirstOrDefault(x => x.serverid == s.Id.ToString());
                 if (res == null)
                 {
                     context.serversettings.Add(new serversettings
                     {
                         serverid = s.DefaultChannel.Id.ToString(),
+                        servername = s.Name,
                         commandprefix = "s?",
                         currencyname = "Yen"
                     });
                     context.SaveChanges();
+                } else
+                {
+                    res.servername = s.Name;
+                    context.serversettings.Update(res);
                 }
-=======
-                commandprefix = "s?",
-                servername = s.Name,
-                serverid = s.DefaultChannel.Id.ToString(),
-            });
-            context.SaveChanges();
->>>>>>> refs/remotes/Tromodolo/master
 
 
 
@@ -122,17 +136,6 @@ namespace SataniaBot.Services
             {
                 Console.WriteLine(ex);
             }
-        }
-
-        public void updateServer(SocketGuild s)
-        {
-
-            var res = context.serversettings.FirstOrDefault(x => x.serverid == s.Id.ToString());
-            res.servername = s.Name;
-            context.serversettings.Update(res);
-            context.SaveChanges();
-            
-            return;
         }
 
         public string getMarriage(string userid)
@@ -532,7 +535,7 @@ namespace SataniaBot.Services
                 var current = getLevel(user.Id.ToString());
                 if ((current.currentExp + experiencegain) > current.levelExp)
                 {
-                    msg.Channel.SendMessageAsync($":up: {msg.Author.Mention} has leveled up to Lv.{++current.level}!");
+                    msg.Channel.SendMessageAsync($"{msg.Author.Mention} had leveled to Lv.{++current.level}");
                 }
             }
             else
@@ -629,7 +632,11 @@ namespace SataniaBot.Services
             var res = context.users.FirstOrDefault(x => x.id == user.Id.ToString());
             if(res != null)
             {
-
+                res.avatarID = user.AvatarId.ToString();
+                res.avatarUrl = user.GetAvatarUrl(ImageFormat.Auto, 128);
+                res.updated_at = DateTime.Now;
+                res.name = user.Username.ToString();
+                context.users.Update(res);
             } else
             {
                 context.users.Add(new users()

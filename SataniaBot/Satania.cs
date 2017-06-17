@@ -47,6 +47,8 @@ namespace SataniaBot
 
             _client.JoinedGuild += _client_JoinedGuild;
             _client.UserJoined += _client_JoinedUser;
+            _client.GuildUpdated += _client_updateGuild;
+            _client.GuildMemberUpdated += _client_userUpdate;
 
             await Task.Delay(5000);
 
@@ -60,16 +62,9 @@ namespace SataniaBot
                         db.addUser(user, false);
                     }
                 }
-<<<<<<< HEAD
             } catch(Exception ex)
             {
                 Console.WriteLine(ex, System.Drawing.Color.OrangeRed);
-=======
-                else
-                {
-                    db.updateServer(guild);
-                }
->>>>>>> refs/remotes/Tromodolo/master
             }
 
             await Task.Delay(2000);
@@ -77,6 +72,8 @@ namespace SataniaBot
             var channelcount = _client.Guilds.SelectMany(x => x.Channels).Count();
             var usercount = _client.Guilds.SelectMany(x => x.Users).Count();
             db.updateWebStatsAsync(guildcount, channelcount, usercount);
+            Console.WriteLine("Connected to Discord Chat Service.\nServers: " + guildcount + " Channels: " + channelcount + " Users: " + usercount, System.Drawing.Color.LawnGreen);
+
             await Task.Delay(-1);                            // Prevent the console window from closing.
         }
 
@@ -91,6 +88,14 @@ namespace SataniaBot
         private async Task _client_JoinedUser(SocketGuildUser arg)
         {
             db.addUser(arg, false);
+        }
+        private async Task _client_updateGuild(SocketGuild a, SocketGuild b)
+        {
+            db.addServerAsync(b);
+        }
+        private async Task _client_userUpdate(SocketGuildUser a, SocketGuildUser b)
+        {
+            db.addUser(b, false);
         }
     }
 }
