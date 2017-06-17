@@ -53,7 +53,7 @@ namespace SataniaBot.Modules
             }
             else
             {
-                Satania.db.updateMoneySuffix(Context.Guild, Suffix);
+                Satania.db.updateMoneyPrefix(Context.Guild, Suffix);
                 await Context.Channel.SendConfirmAsync("New Currency name set to: `" + Suffix + "`");
             }
         }
