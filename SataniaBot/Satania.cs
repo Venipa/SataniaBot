@@ -64,6 +64,10 @@ namespace SataniaBot
                 {                                                       //If a server isn't in the database, the bot won't respond to commands.
                     db.addServer(guild);
                 }
+                else
+                {
+                    //db.updateServer(guild);
+                }
             }
 
             await Task.Delay(-1);                            // Prevent the console window from closing.

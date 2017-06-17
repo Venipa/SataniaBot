@@ -82,13 +82,25 @@ namespace SataniaBot.Services
         {
             context.serversettings.Add(new serversettings
             {
+                commandprefix = "s?",
+                servername = s.Name,
                 serverid = s.DefaultChannel.Id.ToString(),
-                commandprefix = "s?"
             });
             context.SaveChanges();
 
             updateWebStats(Satania._client.Guilds.Count, Satania._client.Guilds.SelectMany(x => x.Channels).Count(), Satania._client.Guilds.SelectMany(x => x.Users).Count());
 
+            return;
+        }
+
+        public void updateServer(SocketGuild s)
+        {
+
+            var res = context.serversettings.FirstOrDefault(x => x.serverid == s.Id.ToString());
+            res.servername = s.Name;
+            context.serversettings.Update(res);
+            context.SaveChanges();
+            
             return;
         }
 
@@ -347,7 +359,7 @@ namespace SataniaBot.Services
                 var current = getLevel(user.Id.ToString());
                 if ((current.currentExp + experiencegain) > current.levelExp)
                 {
-                    msg.Channel.SendMessageAsync($"{msg.Author.Mention} had leveled to Lv.{++current.level}");
+                    msg.Channel.SendMessageAsync($":up: {msg.Author.Mention} has leveled up to Lv.{++current.level}!");
                 }
             }
             else
