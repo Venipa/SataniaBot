@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 using SataniaBot.Services;
+using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace SataniaBot.Database.Tables
 {
@@ -15,6 +16,7 @@ namespace SataniaBot.Database.Tables
         static string username = Configuration.Load().DatabaseUsername;
         static string password = Configuration.Load().DatabasePassword;
         static string dbname = Configuration.Load().DatabaseName;
+        public DbSet<users> users { get; set; }
         public DbSet<commandlist> commandlist { get; set; }
         public DbSet<experiencetimers> experiencetimers { get; set; }
         public DbSet<logchannels> logchannels { get; set; }
@@ -26,11 +28,45 @@ namespace SataniaBot.Database.Tables
         public DbSet<usermarriages> usermarriages { get; set; }
         public DbSet<userrep> userrep { get; set; }
         public DbSet<userreptimers> userreptimers { get; set; }
-        public DbSet<users> users { get; set; }
+        public DbSet<usermoney> usermoney { get; set; }
+        public DbSet<userdailytimer> userdaily { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-            => optionsBuilder
-                .UseMySql($@"Server={host};Port=3306;Database={dbname};Uid={username};Pwd={password};charset=utf8;");
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
+            optionsBuilder.UseMySql($@"Server={host};Port=3306;Database={dbname};Uid={username};Pwd={password};charset=utf8;");
+            optionsBuilder.UseQueryTrackingBehavior(QueryTrackingBehavior.TrackAll);
+            base.OnConfiguring(optionsBuilder);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelbuilder)
+        {
+            foreach (var relationship in modelbuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+            base.OnModelCreating(modelbuilder);
+        }
+    }
+
+    public class users
+    {
+        [Key, MaxLength(30)]
+        public string id { get; set; }
+        [Required, MaxLength(250)]
+        public string name { get; set; }
+        public string email { get; set; }
+        [Required]
+        public int discriminator { get; set; }
+        public string token { get; set; }
+        public string avatarUrl { get; set; }
+        public string avatarID { get; set; }
+        public string remember_token { get; set; }
+
+        public DateTime expire_at { get; set; }
+
+        public DateTime created_at { get; set; }
+
+        public DateTime updated_at { get; set; }
+
     }
     public class commandlist
     {
@@ -79,10 +115,12 @@ namespace SataniaBot.Database.Tables
         public string servername { get; set; }
         [MaxLength(10), Required]
         public string commandprefix { get; set; }
+        [MaxLength(10), Required]
+        public string currencyname { get; set; }
     }
     public class usagestats
     {
-        [MaxLength(11), Required, Key]
+        [MaxLength(11), Required, Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int key { get; set; }
         [MaxLength(11), Required]
         public int servercount { get; set; }
@@ -109,10 +147,7 @@ namespace SataniaBot.Database.Tables
     }
     public class userrep
     {
-        [Required, Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int id { get; set; }
-
-        [MaxLength(50), Required]
+        [MaxLength(50), Key, Required]
         public string userid { get; set; }
 
         [MaxLength(11), Required]
@@ -125,29 +160,18 @@ namespace SataniaBot.Database.Tables
 
         public DateTime lastrep { get; set; }
     }
-    public class users
+    public class userdailytimer
     {
-        [Key, Required]
-        public string id { get; set; }
+        [MaxLength(50), Key, Required]
+        public string userid { get; set; }
+
+        public DateTime lastdaily { get; set; }
+    }
+    public class usermoney
+    {
+        [MaxLength(50), Key, Required]
+        public string userid { get; set; }
         [Required]
-        public string name { get; set; }
-        [Required]
-        public string email { get; set; }
-        [Required]
-        public int discriminator { get; set; }
-        [Required]
-        public string token { get; set; }
-
-        public string avatarUrl { get; set; }
-
-        public string avatarID { get; set; }
-
-        public string remember_token { get; set; }
-
-        public DateTime expire_at { get; set; }
-
-        public DateTime created_at { get; set; }
-
-        public DateTime updated_at { get; set; }
+        public uint money { get; set; }
     }
 }

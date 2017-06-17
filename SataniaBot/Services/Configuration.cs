@@ -18,7 +18,7 @@ namespace SataniaBot.Services
         /// <summary> Ids of users who will have owner access to the bot. </summary>
         public ulong[] Owners { get; set; }
         /// <summary> Your bot's command prefix. </summary>
-        public string Prefix { get; set; } = "run ";
+        public string Prefix { get; set; } = "s?";
         /// <summary> Your bot's login token. </summary>
         public string Token { get; set; } = "";
         /// <summary> Api key for using cleverbot. </summary>

@@ -19,6 +19,8 @@ namespace SataniaBot.Services
 
         public static string serverPrefix { get; set; }
         private static string defaultPrefix = "s?";
+        private static string defaultMoneySuffix = "Yen";
+        public static string serverMoneySuffix { get; set; }
         public async Task Install(DiscordSocketClient c)
         {
             _client = c;                                                 // Save an instance of the discord client.
@@ -39,6 +41,8 @@ namespace SataniaBot.Services
 
             IGuild guild = (s.Channel as IGuildChannel)?.Guild;
             serverPrefix = Satania.db.getPrefix(guild.Id.ToString());
+            serverMoneySuffix = Satania.db.getMoneySuffix(guild.Id.ToString());
+            serverMoneySuffix = serverMoneySuffix != "" ? serverMoneySuffix : defaultMoneySuffix;
             Random xpRandom = new Random();
             DateTime? nowTime = DateTime.Now;
             DateTime? oldTime = Satania.db.getTimer(s.Author.Id.ToString());
