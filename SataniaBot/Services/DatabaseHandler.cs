@@ -535,7 +535,7 @@ namespace SataniaBot.Services
                 var current = getLevel(user.Id.ToString());
                 if ((current.currentExp + experiencegain) > current.levelExp)
                 {
-                    msg.Channel.SendMessageAsync($"{msg.Author.Mention} had leveled to Lv.{++current.level}");
+                    msg.Channel.SendMessageAsync($":up: {msg.Author.Mention} has leveled up to Lv.{++current.level}!");
                 }
             }
             else
@@ -623,14 +623,18 @@ namespace SataniaBot.Services
             }
             return false;
         }
-        public void addUser(SocketUser user, bool isBot = false)
+        public void addUser(SocketUser user, bool isBot = false, bool allowUpdateofUser = false)
         {
             if(user.IsBot != isBot)
             {
                 return;
             }
+            if(!allowUpdateofUser)
+            {
+                return;
+            }
             var res = context.users.FirstOrDefault(x => x.id == user.Id.ToString());
-            if(res != null)
+            if (res != null)
             {
                 res.avatarID = user.AvatarId.ToString();
                 res.avatarUrl = user.GetAvatarUrl(ImageFormat.Auto, 128);
