@@ -57,10 +57,6 @@ namespace SataniaBot
                 foreach (SocketGuild guild in _client.Guilds)
                 {
                     db.addServerAsync(guild);
-                    foreach(SocketUser user in guild.Users)
-                    {
-                        db.addUser(user, false);
-                    }
                 }
             } catch(Exception ex)
             {
@@ -76,14 +72,11 @@ namespace SataniaBot
 
             await Task.Delay(-1);                            // Prevent the console window from closing.
         }
+        
 
         private async Task _client_JoinedGuild(SocketGuild arg)
         {
             db.addServerAsync(arg);
-            foreach (SocketUser user in arg.Users)
-            {
-                db.addUser(user, false);
-            }
         }
         private async Task _client_JoinedUser(SocketGuildUser arg)
         {
@@ -95,7 +88,7 @@ namespace SataniaBot
         }
         private async Task _client_userUpdate(SocketGuildUser a, SocketGuildUser b)
         {
-            db.addUser(b, false);
+            db.addUser(b, false, true);
         }
     }
 }

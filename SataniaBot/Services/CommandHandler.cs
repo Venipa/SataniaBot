@@ -64,6 +64,11 @@ namespace SataniaBot.Services
             if (msg.HasStringPrefix(serverPrefix, ref argPos) ||
                 msg.HasStringPrefix(defaultPrefix, ref argPos))
             {                                                         // Try and execute a command with the given context.
+                Satania.db.addUser(msg.Author, false, false);
+                foreach(var users in msg.MentionedUsers)
+                {
+                    Satania.db.addUser(msg.Author);
+                }
                 result = await _cmds.ExecuteAsync(context, argPos);
                 if (result.IsSuccess)
                 {
