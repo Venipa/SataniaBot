@@ -66,7 +66,7 @@ namespace SataniaBot
                 }
                 else
                 {
-                    //db.updateServer(guild);
+                    db.updateServer(guild);
                 }
             }
 
