@@ -75,6 +75,8 @@ namespace SataniaBot.Database.Tables
     {
         [MaxLength(30), Key, Required]
         public string serverid { get; set; }
+        [MaxLength(45), Required]
+        public string servername { get; set; }
         [MaxLength(10), Required]
         public string commandprefix { get; set; }
     }
