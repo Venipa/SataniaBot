@@ -654,6 +654,7 @@ namespace SataniaBot.Services
 
                 });
             }
+            context.SaveChanges();
         }
     }
 }
