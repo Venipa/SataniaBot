@@ -37,26 +37,6 @@ namespace SataniaBot.Modules
                 await Context.Channel.SendConfirmAsync("New prefix set to: `" + Prefix + "`");
             }
         }
-        [Command("setcurrencyname")]
-        [Summary("Sets currency suffix")]
-        [Remarks("setcurrencyname Yen")]
-        [RequireUserPermission(GuildPermission.Administrator)]
-        public async Task SetCurrencySuffix(string Suffix = null)
-        {
-            if (Suffix == null)
-            {
-                await Context.Channel.SendErrorAsync("You need to specify a prefix at least 1 character long.");
-            }
-            else if (Suffix.Length > 10)
-            {
-                await Context.Channel.SendErrorAsync("The prefix can't be longer than 10 characters long.");
-            }
-            else
-            {
-                Satania.db.updateMoneySuffix(Context.Guild, Suffix);
-                await Context.Channel.SendConfirmAsync("New Currency name set to: `" + Suffix + "`");
-            }
-        }
 
         [Command("ban", RunMode = RunMode.Async)]
         [Summary("Bans a user from the server and deletes last day of messages")]
