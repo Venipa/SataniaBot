@@ -88,6 +88,21 @@ namespace SataniaBot.Services
             }
 
         }
+        public void updateMoneySuffix(SocketGuild s, string suffix)
+        {
+            try
+            {
+                var res = context.serversettings.FirstOrDefault(x => x.serverid == s.Id.ToString());
+                res.currencyname = suffix;
+                context.serversettings.Update(res);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
+
+        }
 
 
         public void addServerAsync(SocketGuild s)
