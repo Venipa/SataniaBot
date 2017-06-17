@@ -13,24 +13,11 @@ namespace SataniaBot.Services
     public class DatabaseHandler
     {
 
-        Database.Tables.MySqlContext context;
+        MySqlContext context;
         public DatabaseHandler()
         {
-            context = new Database.Tables.MySqlContext();
+            context = new MySqlContext();
             context.Database.EnsureCreated();
-        }
-
-        public bool migrate()
-        {
-            try
-            {
-
-                return false;
-            }
-            catch
-            {
-                return false;
-            }
         }
 
         public string getPrefix(string guildid)
@@ -50,6 +37,24 @@ namespace SataniaBot.Services
                 return "";
             }
         }
+        public string getMoneySuffix(string guildid)
+        {
+            try
+            {
+                var res = context.serversettings.FirstOrDefault(x => x.serverid == guildid);
+                if (res != null)
+                {
+                    return res.currencyname;
+                }
+                return "";
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                return "";
+            }
+        }
+
         public ulong getLog(string guildid)
         {
             try
@@ -70,26 +75,45 @@ namespace SataniaBot.Services
 
         public void updatePrefix(SocketGuild s, string prefix)
         {
-            var res = context.serversettings.FirstOrDefault(x => x.serverid == s.Id.ToString());
-            res.commandprefix = prefix;
-            context.serversettings.Update(res);
-            context.SaveChanges();
+            try
+            {
+                var res = context.serversettings.FirstOrDefault(x => x.serverid == s.Id.ToString());
+                res.commandprefix = prefix;
+                context.serversettings.Update(res);
+                context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
 
         }
 
 
-        public void addServer(SocketGuild s)
+        public void addServerAsync(SocketGuild s)
         {
-            context.serversettings.Add(new serversettings
+            try
             {
-                serverid = s.DefaultChannel.Id.ToString(),
-                commandprefix = "s?"
-            });
-            context.SaveChanges();
+                var res = context.serversettings.FirstOrDefault(x => x.serverid == s.Id.ToString());
+                if (res == null)
+                {
+                    context.serversettings.Add(new serversettings
+                    {
+                        serverid = s.DefaultChannel.Id.ToString(),
+                        commandprefix = "s?",
+                        currencyname = "Yen"
+                    });
+                    context.SaveChanges();
+                }
 
-            updateWebStats(Satania._client.Guilds.Count, Satania._client.Guilds.SelectMany(x => x.Channels).Count(), Satania._client.Guilds.SelectMany(x => x.Users).Count());
 
-            return;
+
+                return;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+            }
         }
 
         public string getMarriage(string userid)
@@ -142,7 +166,7 @@ namespace SataniaBot.Services
             }
         }
 
-        public void updateWebStats(int servernum, int channelnum, int usernum)
+        public void updateWebStatsAsync(int servernum, int channelnum, int usernum)
         {
             var res = context.usagestats.FirstOrDefault(x => x.key == Convert.ToInt32(botNameId.Satania));
             if (res != null)
@@ -151,8 +175,17 @@ namespace SataniaBot.Services
                 res.channelcount = channelnum;
                 res.usercount = usernum;
                 context.usagestats.Update(res);
-                context.SaveChanges();
             }
+            else
+            {
+                res = new usagestats();
+                res.servercount = servernum;
+                res.channelcount = channelnum;
+                res.usercount = usernum;
+                res.commandusage = 0;
+                context.usagestats.Add(res);
+            }
+            context.SaveChanges();
         }
 
         public void incrementCommands()
@@ -273,6 +306,7 @@ namespace SataniaBot.Services
                 {
                     res.lastmessage = Now;
                 }
+                context.experiencetimers.Update(res);
             }
             context.SaveChanges();
         }
@@ -284,59 +318,191 @@ namespace SataniaBot.Services
         }
         public string setRep(SocketUser user, string repid)
         {
-            var res = context.userreptimers.FirstOrDefault(x => x.userid == user.Id.ToString());
-            var r = context.userrep.FirstOrDefault(x => x.userid == repid);
-            if (res != null && r != null)
+            try
             {
-                TimeSpan remainingTime = (DateTime.Now - res.lastrep);
+                var res = context.userreptimers.FirstOrDefault(x => x.userid == user.Id.ToString());
+                var r = context.userrep.FirstOrDefault(x => x.userid == repid);
+                if (res != null && r != null)
+                {
+                    TimeSpan remainingTime = (DateTime.Now - res.lastrep);
+                    if (remainingTime.TotalHours > 24)
+                    {
+                        r.reps += 1;
+                        context.userrep.Update(r);
+                        res.lastrep = DateTime.Now;
+                        context.userreptimers.Update(res);
+                        context.SaveChanges();
+                        return null;
+                    }
+                    else
+                    {
+                        var remaining = TimeSpan.FromHours(24) - remainingTime;
+                        return $"**{remaining.Hours} Hour{(remaining.Hours > 1 ? "s" : "")}**, **{remaining.Minutes} Minute{(remaining.Minutes > 1 ? "s" : "")}** and **{remaining.Seconds} Second{(remaining.Seconds > 1 ? "s" : "")}** until you can Rep someone again.";
+                    }
+                }
+                else
+                {
+                    if (r != null)
+                    {
+                        r.reps += 1;
+                        context.userrep.Update(r);
+                    }
+                    else
+                    {
+                        context.userrep.Add(new userrep()
+                        {
+                            userid = repid,
+                            reps = 1
+                        });
+                    }
+
+                    if (res != null)
+                    {
+                        res.lastrep = DateTime.Now;
+                        context.userreptimers.Update(res);
+                    }
+                    else
+                    {
+                        context.userreptimers.Add(new userreptimers()
+                        {
+                            userid = user.Id.ToString(),
+                            lastrep = DateTime.Now
+                        });
+                    }
+                    context.SaveChanges();
+                    return null;
+                }
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex.Message);
+                return "Something wrong happened";
+            }
+
+        }
+        public string getMoney(SocketUser user)
+        {
+            try
+            {
+                var res = context.usermoney.FirstOrDefault(x => x.userid == user.Id.ToString());
+                if (res != null)
+                {
+                    return res.money.ToString();
+                }
+                else
+                {
+                    return "0";
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return null;
+            }
+        }
+        public string addMoney(SocketUser user, uint moneygain, bool addTimeLimit = true)
+        {
+            var res = context.usermoney.FirstOrDefault(x => x.userid == user.Id.ToString());
+            var restime = context.userdaily.FirstOrDefault(x => x.userid == user.Id.ToString());
+            if (res != null && restime != null)
+            {
+                if(!addTimeLimit)
+                {
+                    res.money += moneygain;
+                    context.usermoney.Update(res);
+                    return null;
+                }
+                TimeSpan remainingTime = (DateTime.Now - restime.lastdaily);
                 if (remainingTime.TotalHours > 24)
                 {
-                    r.reps += 1;
-                    context.userrep.Update(r);
-                    res.lastrep = DateTime.Now;
-                    context.userreptimers.Update(res);
+                    res.money += moneygain;
+                    restime.lastdaily = DateTime.Now;
+                    context.usermoney.Update(res);
+                    context.userdaily.Update(restime);
                     context.SaveChanges();
                     return null;
                 }
                 else
                 {
                     var remaining = TimeSpan.FromHours(24) - remainingTime;
-                    return $"**{remaining.Hours} Hour{(remaining.Hours > 1 ? "s" : "")}**, **{remaining.Minutes} Minute{(remaining.Minutes > 1 ? "s" : "")}** and **{remaining.Seconds} Second{(remaining.Seconds > 1 ? "s":"")}** until you can Rep someone again.";
+                    return $"**{remaining.Hours} Hour{(remaining.Hours > 1 ? "s" : "")}**, **{remaining.Minutes} Minute{(remaining.Minutes > 1 ? "s" : "")}** and **{remaining.Seconds} Second{(remaining.Seconds > 1 ? "s" : "")}** until you can get your Daily again.";
                 }
             }
             else
             {
-                if(r != null)
+                if (res != null)
                 {
-                    r.reps += 1;
-                    context.userrep.Update(r);
-                } else
+                    res.money += moneygain;
+                    context.usermoney.Update(res);
+                }
+                else
                 {
-                    context.userrep.Add(new userrep()
+                    context.usermoney.Add(new usermoney()
                     {
-                        userid = repid,
-                        reps = 1
+                        money = moneygain,
+                        userid = user.Id.ToString()
                     });
                 }
-
-                if(res != null)
+                if (restime != null)
                 {
-                    res.lastrep = DateTime.Now;
-                    context.userreptimers.Update(res);
-                } else
+                    restime.lastdaily = DateTime.Now;
+                    context.userdaily.Update(restime);
+                }
+                else
                 {
-                    context.userreptimers.Add(new userreptimers()
+                    context.userdaily.Add(new userdailytimer()
                     {
                         userid = user.Id.ToString(),
-                        lastrep = DateTime.Now
+                        lastdaily = DateTime.Now
+                    });
+                }
+            }
+            context.SaveChanges();
+            return null;
+        }
+        public bool transferMoney(SocketUser user = null, SocketUser destUser = null, uint amount = 0)
+        {
+            try
+            {
+                var user1 = context.usermoney.FirstOrDefault(x => x.userid == user.Id.ToString());
+                var user2 = context.usermoney.FirstOrDefault(x => x.userid == destUser.Id.ToString());
+                if (user == null || destUser == null || amount <= 0)
+                {
+                    return false;
+                }
+                if (user1.money < amount)
+                {
+                    return false;
+                }
+                else
+                {
+                    user1.money -= amount;
+                }
+                context.usermoney.Update(user1);
+                context.SaveChanges();
+                if (user2 != null)
+                {
+                    user2.money += amount;
+                    context.usermoney.Update(user2);
+                } else
+                {
+                    context.usermoney.Add(new usermoney()
+                    {
+                        userid = destUser.Id.ToString(),
+                        money = amount
                     });
                 }
                 context.SaveChanges();
-                return null;
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
             }
 
         }
-
         public void incrementExperience(SocketMessage msg, int experiencegain)
         {
             var user = msg.Author;
@@ -434,6 +600,34 @@ namespace SataniaBot.Services
                 return true;
             }
             return false;
+        }
+        public void addUser(SocketUser user, bool isBot = false)
+        {
+            if(user.IsBot != isBot)
+            {
+                return;
+            }
+            var res = context.users.FirstOrDefault(x => x.id == user.Id.ToString());
+            if(res != null)
+            {
+
+            } else
+            {
+                context.users.Add(new users()
+                {
+                    id = user.Id.ToString(),
+                    avatarID = user.AvatarId.ToString(),
+                    avatarUrl = user.GetAvatarUrl(ImageFormat.Auto, 128),
+                    discriminator = int.Parse(user.Discriminator),
+                    email = null,
+                    created_at = DateTime.Now,
+                    expire_at = DateTime.Now,
+                    updated_at = DateTime.Now,
+                    token = null,
+                    name = user.Username.ToString()
+
+                });
+            }
         }
     }
 }

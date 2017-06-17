@@ -209,18 +209,69 @@ namespace SataniaBot.Modules
         [Remarks("rep cascade")]
         public async Task Rep(SocketUser User = null)
         {
-            if(User == null || User == Context.Message.Author)
+            if (User == null || User == Context.Message.Author)
             {
                 await Context.Channel.SendErrorAsync($"**{Context.Message.Author.Mention} you can't give yourself a reputation point!**");
                 return;
             }
             string res = Satania.db.setRep(Context.Message.Author, User.Id.ToString());
-            if(res != null)
+            if (res != null)
             {
                 await Context.Channel.SendErrorAsync(res);
-            } else
+            }
+            else
             {
                 await Context.Channel.SendConfirmAsync($"**{Context.Message.Author.Username} has given {User.Mention} a reputation point!**");
+            }
+        }
+        [Command("daily")]
+        [Summary("Get you daily money or give it to someone else")]
+        [Remarks("daily [@user]")]
+        public async Task Daily(SocketUser User = null)
+        {
+            if (User == null)
+            {
+                User = Context.Message.Author;
+            }
+            int money = new Random().Next(200, 300);
+            string res = Satania.db.addMoney(Context.Message.Author, Convert.ToUInt32(money));
+            if (res != null)
+            {
+                await Context.Channel.SendErrorAsync(res);
+            }
+            else
+            {
+                await Context.Channel.SendConfirmAsync($"**{Context.Message.Author.Username}, you received your :yen: {money} daily credits!**");
+            }
+        }
+        [Command("money")]
+        [Summary("Display your Money or transfer your Money")]
+        [Remarks("money [@user [check | amount to send]]")]
+        public async Task money(SocketUser User = null, [Remainder]string arg = null)
+        {
+            if (User == null)
+            {
+                User = Context.Message.Author;
+            }
+            if (arg == "check" || arg == null)
+            {
+                string money = Satania.db.getMoney(User);
+                if(money != null)
+                {
+                    await Context.Channel.SendConfirmAsync($"**{User.Username}, has :yen: {money} {SataniaBot.Services.CommandHandler.serverMoneySuffix}**");
+                }
+                return;
+            }
+            if(uint.TryParse(arg, out uint sendMoney))
+            {
+                bool res = Satania.db.transferMoney(Context.Message.Author, User, sendMoney);
+                if(res)
+                {
+                    await Context.Channel.SendConfirmAsync($"{Context.Message.Author} has sent :yen: **{sendMoney} {SataniaBot.Services.CommandHandler.serverMoneySuffix}** to {User.Mention}!");
+                } else
+                {
+                    await Context.Channel.SendErrorAsync($"**You do not have enough Money to send this Amount.**");
+                }
             }
         }
 
