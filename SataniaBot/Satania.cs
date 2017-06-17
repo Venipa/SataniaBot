@@ -60,9 +60,16 @@ namespace SataniaBot
                         db.addUser(user, false);
                     }
                 }
+<<<<<<< HEAD
             } catch(Exception ex)
             {
                 Console.WriteLine(ex, System.Drawing.Color.OrangeRed);
+=======
+                else
+                {
+                    db.updateServer(guild);
+                }
+>>>>>>> refs/remotes/Tromodolo/master
             }
 
             await Task.Delay(2000);
